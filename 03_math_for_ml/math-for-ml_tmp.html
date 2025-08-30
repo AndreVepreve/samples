@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>math-for-ml.md</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+    
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+html,footer,header{
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Custom MD PDF CSS
+ */
+html,footer,header{
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+
+ }
+body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+<link rel="stylesheet" href="file:///Users/andre/Downloads/Week3%202/03_math_for_ml/R%3A%5C2.Travail%5C1.Enseignement%5CCours%5C_1.Outils%5C2.Developpement%5C1.SCSS%5Cmain.css" type="text/css"><link rel="stylesheet" href="file:///Users/andre/Downloads/Week3%202/03_math_for_ml/D%3A%5Crdaros%5CCours%5C_1.Outils%5C2.Developpement%5C1.SCSS%5Cmain.css" type="text/css">
+</head>
+
+<body>
+    <h1 id="mathematics-for-machine-learning--comprehensive-notes">Mathematics for Machine Learning — Comprehensive Notes</h1>
+<blockquote>
+<p>A deep-dive, exam-ready reference that unfolds the “Mathematics for Machine Learning” chapter into detailed explanations, derivations, examples, NumPy snippets, and practical tips. Focus areas are <strong>Linear Algebra Essentials</strong> and <strong>Norms, Inner Products, and Inequalities</strong>, followed by concise but complete definitions of <strong>Eigenvalues/Eigenvectors</strong>, <strong>SVD</strong>, <strong>Pseudoinverse</strong>, <strong>Jacobian</strong>, <strong>Hessian</strong>, and related shapes you’ll use every day as an AI engineer.</p>
+</blockquote>
+<hr>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li>Linear Algebra Essentials<br>
+1.1 Vectors, matrices, tensors, and shapes<br>
+1.2 Matrix operations (add, scalar, matmul)<br>
+1.3 Special matrices (identity, diagonal, symmetric, orthogonal)<br>
+1.4 Rank, range, null space, linear independence<br>
+1.5 Determinant and invertibility<br>
+1.6 Numerical issues: conditioning, scaling</li>
+<li>Norms, Inner Products, and Inequalities<br>
+2.1 Vector norms (ℓ₀, ℓ₁, ℓ₂, ℓ∞) and when to use them<br>
+2.2 Matrix norms (Frobenius, spectral)<br>
+2.3 Inner products, cosine similarity<br>
+2.4 Cauchy–Schwarz, triangle inequality, Hölder &amp; Minkowski</li>
+<li>Eigenvalues &amp; Eigenvectors — definition, intuition, uses</li>
+<li>Singular Value Decomposition (SVD) — definition, properties, low-rank</li>
+<li>Moore–Penrose Pseudoinverse — definition, least squares, SVD link</li>
+<li>Matrix Calculus Cheat Sheet — Jacobian, gradient, Hessian (with shapes)</li>
+<li>Worked Example — Linear regression: closed form, gradient descent, ridge</li>
+<li>Quick Reference — “what to use when” for interviews &amp; projects</li>
+</ol>
+<hr>
+<h2 id="1-linear-algebra-essentials">1) Linear Algebra Essentials</h2>
+<p><a id="sec-linear-algebra"></a></p>
+<h3 id="11-vectors-matrices-tensors-and-shapes">1.1 Vectors, matrices, tensors, and shapes</h3>
+<ul>
+<li><strong>Vector</strong>: ordered list of numbers, an element of $\mathbb{R}^n$. Shape: <code>(n,)</code> or <code>(n,1)</code>.</li>
+<li><strong>Matrix</strong>: rectangular array in $\mathbb{R}^{m\times n}$. Acts as a linear map $A: \mathbb{R}^n \to \mathbb{R}^m$.<br>
+<img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_linear_map.png" alt=""></li>
+<li><strong>Tensor</strong>: multi-dimensional array; in ML, usually order-3+ arrays (e.g., images as <code>H×W×C</code>).</li>
+</ul>
+<p><strong>NumPy toy example</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+x = np.array([<span class="hljs-number">1.</span>, <span class="hljs-number">2.</span>, <span class="hljs-number">3.</span>])         <span class="hljs-comment"># shape (3,)</span>
+A = np.array([[<span class="hljs-number">1.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">-1.</span>],
+              [<span class="hljs-number">2.</span>, <span class="hljs-number">1.</span>,  <span class="hljs-number">0.</span>]])      <span class="hljs-comment"># shape (2,3)</span>
+y = A @ x                          <span class="hljs-comment"># shape (2,)</span>
+</div></code></pre>
+<hr>
+<h3 id="12-matrix-operations-add-scalar-matmul">1.2 Matrix operations (add, scalar, matmul)</h3>
+<ul>
+<li><strong>Addition / Scalar</strong>: Element-wise, same shape requirement.</li>
+<li><strong>Matrix multiplication</strong>: <code>(m×n)·(n×p) -&gt; (m×p)</code>. Not commutative but associative.<br>
+Element formula:<br>
+<img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_matmul_element.png" alt=""></li>
+</ul>
+<p><strong>Dot product (vector)</strong>: $\mathbf{a}^\top \mathbf{b}$ equals the Euclidean inner product; $|\mathbf{a}|_2^2 = \mathbf{a}^\top\mathbf{a}$.</p>
+<hr>
+<h3 id="13-special-matrices">1.3 Special matrices</h3>
+<ul>
+<li><strong>Identity $I$</strong>: $I\mathbf{x}=\mathbf{x}$.</li>
+<li><strong>Diagonal $D$</strong>: $D_{ij}=0$ for $i\neq j$; easy to invert if diagonal entries nonzero.</li>
+<li><strong>Symmetric $A=A^\top$</strong>: real eigenvalues; orthogonal eigenvectors.</li>
+<li><strong>Orthogonal $Q^\top Q=I$</strong>: length-preserving transforms (rotations/reflections).<br>
+<img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_orthogonal_preserve.png" alt=""></li>
+</ul>
+<p><strong>Why you care</strong>: Orthogonal/Unitary transforms (Fourier, PCA bases) preserve energy; helpful for stable optimization and conditioning.</p>
+<hr>
+<h3 id="14-rank-range-null-space-linear-independence">1.4 Rank, range, null space, linear independence</h3>
+<ul>
+<li><strong>Rank</strong>: dimension of the column space (number of independent columns).</li>
+<li><strong>Range (column space)</strong>: all vectors $A\mathbf{x}$ you can reach.</li>
+<li><strong>Null space</strong>: all vectors $\mathbf{x}$ with $A\mathbf{x}=\mathbf{0}$.</li>
+<li><strong>Rank–nullity</strong> (for $A\in\mathbb{R}^{m\times n}$):<br>
+<img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_rank_nullity.png" alt=""></li>
+</ul>
+<p><strong>ML motivation</strong>: Rank tells you if features are redundant; low rank ⇒ compressible data ⇒ PCA/low-rank models.</p>
+<hr>
+<h3 id="15-determinant-and-invertibility">1.5 Determinant and invertibility</h3>
+<ul>
+<li><strong>Determinant</strong> measures volume scaling for square $A$. $\det(A)=0$ ⇒ singular (not invertible).</li>
+<li><strong>Invertibility</strong>: $A^{-1}$ satisfies $AA^{-1}=I$. Equivalent condition:<br>
+<img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_invertible_det.png" alt=""></li>
+</ul>
+<p><strong>Geometric picture</strong>: In $\mathbb{R}^2$, $|\det(A)|$ is the area scale factor of a transformed unit square.</p>
+<hr>
+<h3 id="16-numerical-issues-conditioning--scaling">1.6 Numerical issues: conditioning &amp; scaling</h3>
+<ul>
+<li><strong>Condition number</strong> gauges sensitivity. Large $\kappa$ ⇒ tiny data noise causes large solution errors.<br>
+<img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_condition_number.png" alt=""></li>
+<li><strong>Best practice</strong>: center/standardize features; avoid explicitly computing matrix inverses; prefer factorizations (QR/SVD/Cholesky).</li>
+</ul>
+<hr>
+<h2 id="2-norms-inner-products-and-inequalities">2) Norms, Inner Products, and Inequalities</h2>
+<p><a id="sec-norms"></a></p>
+<h3 id="21-vector-norms-how-we-measure-size">2.1 Vector norms (how we measure size)</h3>
+<p>A <strong>norm</strong> $|\cdot|$ maps vectors to nonnegative scalars and satisfies positivity, homogeneity, and triangle inequality.</p>
+<p>Common vector norms:</p>
+<ul>
+<li><strong>$\ell_2$ (Euclidean)</strong>: $|\mathbf{x}|_2=\sqrt{\sum_i x_i^2}$. Smooth; rotationally invariant.</li>
+<li><strong>$\ell_1$</strong>: $|\mathbf{x}|_1=\sum_i |x_i|$. Promotes sparsity (Lasso).</li>
+<li><strong>$\ell_\infty$</strong>: $|\mathbf{x}|_\infty=\max_i |x_i|$. Useful for worst-case bounds.</li>
+<li><strong>$\ell_0$</strong> (not a true norm): counts nonzeros; used conceptually in sparsity.</li>
+</ul>
+<p>General $p$-norm:<br>
+<img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_p_norm.png" alt=""></p>
+<p><strong>Choosing norms in ML</strong></p>
+<ul>
+<li>Use $\ell_2$ in smooth optimization &amp; Gaussian noise models.</li>
+<li>Use $\ell_1$ when you want feature selection (sparsity).</li>
+<li>Use $\ell_\infty$ for robust, adversarial, or max-error constraints.</li>
+</ul>
+<hr>
+<h3 id="22-matrix-norms">2.2 Matrix norms</h3>
+<ul>
+<li><strong>Frobenius</strong>: element-wise energy.</li>
+<li><strong>Spectral / operator (induced by $\ell_2$)</strong>: largest singular value.<br>
+<img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_matrix_norms.png" alt=""></li>
+</ul>
+<p><strong>Tips</strong>: Use $|\cdot|_F$ for easy, element-wise energy; use $|\cdot|_2$ when operator amplification matters (stability).</p>
+<hr>
+<h3 id="23-inner-products-and-cosine-similarity">2.3 Inner products and cosine similarity</h3>
+<p>Angle-based similarity used in embeddings:<br>
+<img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_cosine_sim.png" alt=""></p>
+<hr>
+<h3 id="24-inequalities-youll-actually-use">2.4 Inequalities you’ll actually use</h3>
+<ul>
+<li><strong>Cauchy–Schwarz</strong>:</li>
+</ul>
+<pre class="hljs"><code><div>|\mathbf{a}^\top\mathbf{b}|\le \|\mathbf{a}\|_2\|\mathbf{b}\|_2
+</div></code></pre>
+<ul>
+<li><strong>Triangle inequality</strong>: $|\mathbf{a}+\mathbf{b}|\le |\mathbf{a}|+|\mathbf{b}|$.</li>
+<li><strong>Hölder</strong>: $\sum_i |a_i b_i| \le |\mathbf{a}|_p|\mathbf{b}|_q$ with $1/p+1/q=1$.</li>
+<li><strong>Minkowski</strong>: $|\mathbf{a}+\mathbf{b}|_p \le |\mathbf{a}|_p+|\mathbf{b}|_p$.</li>
+</ul>
+<hr>
+<h2 id="3-eigenvalues--eigenvectors-definition-purpose-intuition">3) Eigenvalues &amp; Eigenvectors (definition, purpose, intuition)</h2>
+<p><a id="sec-eig"></a></p>
+<p>Definition:<br>
+<img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_eig.png" alt=""></p>
+<p>Why useful: spectral theorem (symmetric matrices), PCA, graph Laplacians, power iteration.</p>
+<hr>
+<h2 id="4-singular-value-decomposition-svd">4) Singular Value Decomposition (SVD)</h2>
+<p><a id="sec-svd"></a></p>
+<p>Works for any $m\times n$ matrix:<br>
+<img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_svd.png" alt=""> with descending singular values.</p>
+<p>Low-rank approximation (Eckart–Young):<br>
+<img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_eckart_young.png" alt=""></p>
+<p>PCA via SVD: principal directions in $V$, variances in $\Sigma^2/(n-1)$.</p>
+<hr>
+<h2 id="5-moore%E2%80%93penrose-pseudoinverse">5) Moore–Penrose Pseudoinverse</h2>
+<p><a id="sec-pinv"></a></p>
+<p>Via SVD:<br>
+<img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_pinv.png" alt=""></p>
+<p>Least squares: $\hat{\mathbf{x}}=A^+\mathbf{b}$ for over/under-determined systems.</p>
+<hr>
+<h2 id="6-matrix-calculus-cheat-sheet--jacobian-gradient-hessian-with-shapes">6) Matrix Calculus Cheat Sheet — Jacobian, Gradient, Hessian (with shapes)</h2>
+<p><a id="sec-mcalc"></a></p>
+<ul>
+<li>Jacobian:<br>
+<img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_jacobian.png" alt=""></li>
+<li>Hessian:<br>
+<img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_hessian.png" alt=""></li>
+</ul>
+<p>Chain rule:<br>
+<img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_chain_rule.png" alt=""></p>
+<p>Least-squares gradient (and $H=A^\top A$):<br>
+<img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_ls_grad.png" alt=""></p>
+<hr>
+<h2 id="7-worked-example--linear-regression-closed-form-gd-ridge">7) Worked Example — Linear Regression (closed form, GD, ridge)</h2>
+<p><a id="sec-linreg"></a></p>
+<p>Objective, gradients, and ridge closed form:<br>
+<img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_ridge_closed.png" alt=""></p>
+<p><strong>NumPy template</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+
+n, d = <span class="hljs-number">100</span>, <span class="hljs-number">5</span>
+X = np.random.randn(n, d)
+true_w = np.array([<span class="hljs-number">1.0</span>, <span class="hljs-number">-2.0</span>, <span class="hljs-number">0.5</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">3.0</span>])
+y = X @ true_w + <span class="hljs-number">0.1</span>*np.random.randn(n)
+
+<span class="hljs-comment"># Closed form via solve (more stable than explicit inverse)</span>
+w_hat = np.linalg.solve(X.T @ X, X.T @ y)
+
+<span class="hljs-comment"># Ridge</span>
+lam = <span class="hljs-number">1e-2</span>
+w_ridge = np.linalg.solve(X.T @ X + n*lam*np.eye(d), X.T @ y)
+
+<span class="hljs-comment"># Gradient Descent</span>
+w = np.zeros(d)
+eta = <span class="hljs-number">1e-2</span>
+<span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> range(<span class="hljs-number">2000</span>):
+    grad = (X.T @ (X @ w - y)) / n
+    w -= eta * grad
+</div></code></pre>
+<hr>
+<h2 id="8-quick-definitions--interview-ready-notes">8) Quick definitions &amp; interview-ready notes</h2>
+<p><a id="sec-quick"></a></p>
+<h3 id="eigenvalues--eigenvectors">Eigenvalues &amp; Eigenvectors</h3>
+<p><img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_eig.png" alt=""></p>
+<p><strong>What they are.</strong> For a square matrix A, nonzero vector v and scalar λ satisfying A v = λ v are an <strong>eigenvector/eigenvalue</strong> pair. Eigenvectors are directions that are only <strong>scaled</strong> (not rotated) by the linear map; λ is the scale (possibly negative).</p>
+<p><strong>Why they matter in ML.</strong></p>
+<ul>
+<li><strong>PCA</strong>: eigenvectors of the covariance matrix give principal directions; eigenvalues give explained variance per direction.</li>
+<li><strong>Stability &amp; dynamics</strong>: the sign/magnitude of eigenvalues of Jacobians/Hessians or update operators hints at stability/divergence.</li>
+<li><strong>Graph learning</strong>: eigenpairs of graph Laplacians encode cuts, diffusion, and community structure.</li>
+<li><strong>Optimization geometry</strong>: eigenvalues of the Hessian quantify curvature; small eigenvalues → flat directions, large → steep directions.</li>
+</ul>
+<p><strong>Key properties.</strong></p>
+<ul>
+<li>Symmetric (real) matrices have <strong>real eigenvalues</strong> and <strong>orthonormal eigenvectors</strong> (spectral theorem).</li>
+<li>The <strong>trace</strong> equals the sum of eigenvalues; <strong>determinant</strong> equals the product of eigenvalues.</li>
+<li>The <strong>dominant eigenvector</strong> can be approximated efficiently via <strong>power iteration</strong>.</li>
+</ul>
+<p><strong>Pitfalls.</strong> For non‑symmetric matrices, eigenvectors may be non‑orthogonal or complex; use SVD for robust geometry.</p>
+<hr>
+<h3 id="singular-value-decomposition-svd">Singular Value Decomposition (SVD)</h3>
+<p><img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_svd.png" alt="">   (Best rank‑k approx: <img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_eckart_young.png" alt="">)</p>
+<p><strong>What it is.</strong> Any A ∈ ℝ^{m×n} factors as A = U Σ V^T with orthonormal U,V and nonnegative singular values in Σ. It is the most <strong>numerically stable</strong> way to study a linear map’s action.</p>
+<p><strong>Why it’s ubiquitous.</strong></p>
+<ul>
+<li><strong>Compression / low‑rank</strong>: truncate to k singular values to get the best rank‑k approximation in Frobenius norm.</li>
+<li><strong>PCA via SVD</strong>: for zero‑mean data matrix X, right singular vectors (rows of V^T) are principal axes; Σ^2/(n−1) gives variances.</li>
+<li><strong>Conditioning</strong>: κ₂(A) = σ_max/σ_min (see <img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_condition_number.png" alt="">).</li>
+</ul>
+<p><strong>When to use it.</strong> Ill‑conditioned least squares, dimensionality reduction, denoising, initialization, and diagnostics.</p>
+<p><strong>Cost.</strong> Dense SVD is O(m n min{m,n}); use randomized/iterative SVD for large sparse matrices.</p>
+<hr>
+<h3 id="moore%E2%80%93penrose-pseudoinverse">Moore–Penrose Pseudoinverse</h3>
+<p><img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_pinv.png" alt=""></p>
+<p><strong>What it is.</strong> For any matrix A, the <strong>pseudoinverse</strong> A^+ provides the minimum‑norm solution to least squares, even when A is rectangular or rank‑deficient.</p>
+<p><strong>Core use (least squares).</strong> Solve min_x ||A x − b||₂² via x* = A^+ b. This equals the limit of ridge solutions as λ → 0⁺, and is given stably by the SVD (invert nonzero singular values).</p>
+<p><strong>Why not invert?</strong> Explicit (A^T A)^{-1} A^T is numerically fragile; A^+ via SVD handles rank deficiency gracefully.</p>
+<p><strong>Interview tips.</strong> State the four Penrose conditions if asked for formality; in practice, say “compute via SVD, zero‑out tiny σ_i.”</p>
+<hr>
+<h3 id="jacobian-for-vector-outputs-and-hessian-for-scalar-objectives">Jacobian (for vector outputs) and Hessian (for scalar objectives)</h3>
+<p><img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_jacobian.png" alt="">   <img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_hessian.png" alt="">   Chain rule: <img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_chain_rule.png" alt=""></p>
+<p><strong>Jacobian.</strong> For f: ℝⁿ→ℝᵐ, the <strong>Jacobian</strong> J_f ∈ ℝ^{m×n} collects first derivatives and is the best <strong>linear approximation</strong> of f near a point. In deep learning, backprop is repeated Jacobian‑vector (and vector‑Jacobian) products.</p>
+<p><strong>Hessian.</strong> For a scalar g: ℝⁿ→ℝ, the <strong>Hessian</strong> H_g ∈ ℝ^{n×n} contains second derivatives (curvature). In optimization:</p>
+<ul>
+<li><strong>Newton/Quasi‑Newton</strong> methods use H^{-1} ∇g (or approximations) for fast convergence.</li>
+<li><strong>Convexity</strong>: H ⪰ 0 locally implies convex behavior; eigenvalues of H quantify anisotropy/ill‑conditioning.</li>
+</ul>
+<p><strong>Shapes &amp; practice.</strong></p>
+<ul>
+<li>If f(x)=A x, then J_f = A; for least squares ½||A x − b||₂², ∇ = A^T(Ax − b) and H = A^T A (see <img src="file:///Users/andre/Downloads/Week3 2/03_math_for_ml/assets/f_ls_grad.png" alt="">).</li>
+<li>Exact Hessians are expensive in high‑D; use <strong>Hessian‑vector products</strong> (automatic differentiation) for CG/Trust‑Region methods.</li>
+</ul>
+<hr>
+<h3 id="sources--further-reading">Sources &amp; Further Reading</h3>
+<ul>
+<li>Gilbert Strang — <em>Linear Algebra and Learning from Data</em></li>
+<li>Boyd &amp; Vandenberghe — <em>Convex Optimization</em> (free PDF)</li>
+<li>Goodfellow, Bengio, Courville — <em>Deep Learning</em> (MIT Press, free online)</li>
+<li>Murphy — <em>Probabilistic Machine Learning</em></li>
+<li>Petersen &amp; Pedersen — <em>The Matrix Cookbook</em> (free PDF)</li>
+</ul>
+<hr>
+<h2 id="practical-examples-hands-on">Practical Examples (Hands-on)</h2>
+<h3 id="matrix-multiplication--associativity">Matrix multiplication &amp; associativity</h3>
+<p>Let</p>
+<pre class="hljs"><code><div>A = [[1, 2],
+     [0, 1]]
+B = [[ 2, 0],
+     [-1, 3]]
+C = [[1, 1],
+     [4, 0]]
+</div></code></pre>
+<p>Then</p>
+<pre class="hljs"><code><div>A @ (B @ C) = [[24, 0], [11, -1]]
+(A @ B) @ C = [[24, 0], [11, -1]]
+</div></code></pre>
+<p>They are equal, illustrating associativity.</p>
+<h3 id="orthogonal-matrix-rotation">Orthogonal matrix (rotation)</h3>
+<p>45° rotation matrix (Q) satisfies (Q^\top Q \approx I):</p>
+<pre class="hljs"><code><div>Q^T Q ≈
+[[1.0, 0.0], [0.0, 1.0]]
+</div></code></pre>
+<h3 id="rank--null-space">Rank &amp; null space</h3>
+<p>For</p>
+<pre class="hljs"><code><div>M = [[1, 2, 3],
+     [2, 4, 6]]
+</div></code></pre>
+<pre class="hljs"><code><div>rank(M) = 1
+nullspace basis ≈ [[-2, 1, 0], [-3, 0, 1]]
+</div></code></pre>
+<p>(check: each basis vector v satisfies M @ v = 0).</p>
+<h3 id="determinant--area-scaling">Determinant &amp; area scaling</h3>
+<p>For</p>
+<pre class="hljs"><code><div>A = [[2, 0],
+     [1, 3]]
+det(A) = 6.0
+</div></code></pre>
+<p>A unit square’s area scales by |det(A)| = 6.0.</p>
+<h3 id="ill-conditioning-demo">Ill-conditioning demo</h3>
+<p>Let</p>
+<pre class="hljs"><code><div>A = [[1, 1],
+     [1, 1+ε]],  ε = 0.0001
+cond_2(A) ≈ 4.0e+04
+</div></code></pre>
+<p>Two nearby right-hand sides give very different solutions:</p>
+<pre class="hljs"><code><div>x(b=[2, 2+ε]) = [1.0, 1.0]
+x(b=[2, 2-ε]) = [3.0, -1.0]
+Δx = [2.0, -2.0]
+</div></code></pre>
+<h3 id="vector-norms">Vector norms</h3>
+<p>For v = [3.0, -4.0, 0.0, 12.0]:</p>
+<pre class="hljs"><code><div>||v||_1 = 19.0
+||v||_2 = 13.0000
+||v||_∞ = 12.0
+</div></code></pre>
+<h3 id="cosine-similarity">Cosine similarity</h3>
+<p>For a = [1.0, 2.0, 3.0], b = [-1.0, 0.0, 1.0]:</p>
+<pre class="hljs"><code><div>cosθ = 0.377964
+Cauchy–Schwarz: |a·b| = 2.000000 ≤ ||a||·||b|| = 5.291503
+Triangle: ||a+b|| = 4.472136 ≤ ||a|| + ||b|| = 5.155871
+</div></code></pre>
+<h3 id="eigenvalues--eigenvectors-symmetric">Eigenvalues &amp; eigenvectors (symmetric)</h3>
+<p>For</p>
+<pre class="hljs"><code><div>A = [[2, 1],
+     [1, 2]]
+</div></code></pre>
+<pre class="hljs"><code><div>eigenvalues = [3.0, 1.0]
+eigenvectors (columns) ≈
+[[0.707107, -0.707107], [0.707107, 0.707107]]
+</div></code></pre>
+<h3 id="svd-tiny-2%C3%972">SVD (tiny 2×2)</h3>
+<p>For</p>
+<pre class="hljs"><code><div>T = [[3, 1],
+     [1, 3]]
+</div></code></pre>
+<pre class="hljs"><code><div>U ≈ [[-0.707107, -0.707107], [-0.707107, 0.707107]]
+S ≈ [4.0, 2.0]
+V^T ≈ [[-0.707107, -0.707107], [-0.707107, 0.707107]]
+</div></code></pre>
+<h3 id="pseudoinverse-for-least-squares">Pseudoinverse for least squares</h3>
+<p>Solve min_x ||Ax - b||_2 with</p>
+<pre class="hljs"><code><div>A = [[1,0],
+     [1,1],
+     [1,2]],  b = [1, 2, 2]
+x* = [1.166667, 0.5]
+MSE = 0.055556
+</div></code></pre>
+<h3 id="jacobian--hessian-at-xy12">Jacobian &amp; Hessian at (x,y)=(1,2)</h3>
+<p>For f(x,y) = [x^2, x y] and g(x,y) = x^2 + x y + y^2:</p>
+<pre class="hljs"><code><div>J_f(1,2) =
+[[2.0, 0.0], [2.0, 1.0]]
+∇g(1,2) = [4.0, 5.0]
+H_g = 
+[[2.0, 1.0], [1.0, 2.0]]
+</div></code></pre>
+<hr>
+<h2 id="sources--links-officialauthoritative">Sources &amp; Links (Official/Authoritative)</h2>
+<ul>
+<li>Boyd &amp; Vandenberghe — <em>Convex Optimization</em> (free PDF, Stanford) — https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf</li>
+<li>Convex Optimization homepage (slides, extras) — https://stanford.edu/~boyd/cvxbook/</li>
+<li>Petersen &amp; Pedersen — <em>The Matrix Cookbook</em> (DTU) — https://www2.compute.dtu.dk/pubdb/pubs/3274-full.html</li>
+<li>The Matrix Cookbook (Waterloo mirror PDF) — https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf</li>
+<li>Goodfellow, Bengio, Courville — <em>Deep Learning</em> (free online) — https://www.deeplearningbook.org/</li>
+<li>MIT OCW 18.06 Linear Algebra (Strang) — https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/</li>
+<li>MIT OCW 18.06SC (self-paced) — https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/</li>
+<li>Murphy — <em>Probabilistic Machine Learning</em> (series site) — https://probml.github.io/pml-book/</li>
+<li>Murphy — <em>Probabilistic Machine Learning: An Introduction</em> (MIT Press) — https://mitpress.mit.edu/9780262046824/probabilistic-machine-learning/</li>
+</ul>
+<hr>
+<h2 id="glossary--terms-and-abbreviations-in-the-quick-notes-fully-explained">Glossary — Terms and Abbreviations in the Quick Notes (Fully Explained)</h2>
+<p><a id="sec-glossary"></a></p>
+<h3 id="axes-principal-axes">Axes (Principal Axes)</h3>
+<p><a href="#sec-eig">see</a> • <a href="#sec-svd">see</a></p>
+<p><strong>Cheat table</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Symbols</td>
+<td>principal axes, PCs</td>
+</tr>
+<tr>
+<td>Shape</td>
+<td>Each axis is a unit vector in ℝ^d</td>
+</tr>
+<tr>
+<td>Typical use</td>
+<td>Projection, visualization, compression, denoising</td>
+</tr>
+<tr>
+<td>Pitfalls</td>
+<td>Non-centered data skews directions; scale features first</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tiny NumPy snippet</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Principal axes via SVD (center first)</span>
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+X = np.random.randn(<span class="hljs-number">200</span>, <span class="hljs-number">5</span>)
+Xc = X - X.mean(axis=<span class="hljs-number">0</span>, keepdims=<span class="hljs-literal">True</span>)
+U, S, Vt = np.linalg.svd(Xc, full_matrices=<span class="hljs-literal">False</span>)
+principal_axes = Vt.T  <span class="hljs-comment"># columns are axes</span>
+</div></code></pre>
+<p><strong>Definition.</strong> Coordinate directions used to describe data or a linear map. In PCA or spectral analyses, <strong>principal axes</strong> are orthonormal directions along which data variance is extremal.<br>
+<strong>Purpose.</strong> Provide an interpretable basis to project, visualize, compress, and denoise data.<br>
+<strong>Details.</strong> The principal axes are the eigenvectors of the covariance matrix (or right singular vectors from SVD of the centered data matrix). Projections onto the first few axes retain most variance.</p>
+<h3 id="scaling-in-eigenanalysis">Scaling (in Eigenanalysis)</h3>
+<p><a href="#sec-eig">see</a></p>
+<p><strong>Cheat table</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Symbols</td>
+<td>λ (eigenvalue)</td>
+</tr>
+<tr>
+<td>Shape</td>
+<td>Scalar</td>
+</tr>
+<tr>
+<td>Typical use</td>
+<td>Growth/decay along eigen-directions; stability</td>
+</tr>
+<tr>
+<td>Pitfalls</td>
+<td>Negative λ flips direction; complex pairs for non-symmetric A</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tiny NumPy snippet</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Scaling along an eigenvector</span>
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+A = np.array([[<span class="hljs-number">2.</span>,<span class="hljs-number">1.</span>],[<span class="hljs-number">1.</span>,<span class="hljs-number">2.</span>]])
+w, V = np.linalg.eig(A)
+v = V[:, <span class="hljs-number">0</span>]; lam = w[<span class="hljs-number">0</span>]
+np.allclose(A @ v, lam * v)  <span class="hljs-comment"># True</span>
+</div></code></pre>
+<p><strong>Definition.</strong> The multiplicative change of a vector in a specific direction under a linear map. If (A\mathbf{v}=\lambda \mathbf{v}), the factor (\lambda) is the <strong>scaling</strong> along eigenvector (\mathbf{v}).<br>
+<strong>Purpose.</strong> Explains how transformations stretch or contract space; used in stability, conditioning, and mode analysis.<br>
+<strong>Details.</strong> Negative (\lambda) flips direction; (|\lambda|&gt;1) expands, (|\lambda|&lt;1) contracts.</p>
+<h3 id="pca-principal-component-analysis">PCA (Principal Component Analysis)</h3>
+<p><a href="#sec-svd">see</a></p>
+<p><strong>Cheat table</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Symbols</td>
+<td>PCs, Σ (singular values)</td>
+</tr>
+<tr>
+<td>Shape</td>
+<td>PCs: d×d (orthonormal); variances: diag(Σ^2)/(n-1)</td>
+</tr>
+<tr>
+<td>Typical use</td>
+<td>Dimensionality reduction, denoising, feature decorrelation</td>
+</tr>
+<tr>
+<td>Pitfalls</td>
+<td>Sensitive to scaling/outliers; not supervised</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tiny NumPy snippet</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># PCA via SVD: explained variance</span>
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+X = np.random.randn(<span class="hljs-number">300</span>, <span class="hljs-number">10</span>)
+Xc = X - X.mean(axis=<span class="hljs-number">0</span>, keepdims=<span class="hljs-literal">True</span>)
+U, S, Vt = np.linalg.svd(Xc, full_matrices=<span class="hljs-literal">False</span>)
+explained = (S**<span class="hljs-number">2</span>) / (Xc.shape[<span class="hljs-number">0</span>]<span class="hljs-number">-1</span>)
+explained_ratio = explained / explained.sum()
+</div></code></pre>
+<p><strong>Definition.</strong> Orthogonal linear transform that rotates data to a basis of maximal variance directions.<br>
+<strong>Purpose.</strong> <strong>Dimensionality reduction</strong>, <strong>compression</strong>, <strong>denoising</strong>, and <strong>visualization</strong>.<br>
+<strong>Details.</strong> For centered data (X), SVD (X=U\Sigma V^\top) yields principal components (columns of (V)); variances are (\Sigma^2/(n-1)). The first (k) components explain the largest portion of variance.</p>
+<h3 id="stability-optimization--dynamics--linear-systems">Stability (Optimization / Dynamics / Linear Systems)</h3>
+<p><a href="#sec-eig">see</a> • <a href="#sec-mcalc">see</a></p>
+<p><strong>Cheat table</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Symbols</td>
+<td>ρ(A) (spectral radius), λ_max(H)</td>
+</tr>
+<tr>
+<td>Shape</td>
+<td>Scalars</td>
+</tr>
+<tr>
+<td>Typical use</td>
+<td>Choose LR bounds; judge convergence of iterations</td>
+</tr>
+<tr>
+<td>Pitfalls</td>
+<td>Using too large LR; ignoring non-normality in A</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tiny NumPy snippet</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># GD stability on a quadratic: eta &lt; 2 / lambda_max(H)</span>
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+H = np.array([[<span class="hljs-number">2.</span>,<span class="hljs-number">1.</span>],[<span class="hljs-number">1.</span>,<span class="hljs-number">2.</span>]])
+lam_max = np.linalg.eigvalsh(H).max()
+eta_stable = <span class="hljs-number">2.0</span> / lam_max
+</div></code></pre>
+<p><strong>Definition.</strong> A property describing whether iterates or trajectories remain bounded or converge (vs. diverge).<br>
+<strong>Purpose.</strong> Guarantees predictable training and robust systems.<br>
+<strong>Details.</strong> In gradient descent on a quadratic with Hessian (H), step size (\eta) must satisfy (0&lt;\eta&lt;2/\lambda_{\max}(H)) to ensure stability. In discrete linear systems (x_{t+1}=Ax_t), stability requires spectral radius (\rho(A)&lt;1).</p>
+<h3 id="universal-re-svd-as-a-universal-factorization">Universal (re: SVD as a universal factorization)</h3>
+<p><a href="#sec-svd">see</a></p>
+<p><strong>Cheat table</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Symbols</td>
+<td>U, Σ, V^T</td>
+</tr>
+<tr>
+<td>Shape</td>
+<td>U: m×m, Σ: m×n, V^T: n×n</td>
+</tr>
+<tr>
+<td>Typical use</td>
+<td>Geometry of any linear map; diagnostics</td>
+</tr>
+<tr>
+<td>Pitfalls</td>
+<td>Dense SVD is O(m n min(m,n)) — heavy for large dense matrices</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tiny NumPy snippet</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># SVD exists for any matrix (rectangular too)</span>
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+A = np.random.randn(<span class="hljs-number">6</span>, <span class="hljs-number">3</span>)
+U, S, Vt = np.linalg.svd(A, full_matrices=<span class="hljs-literal">False</span>)
+</div></code></pre>
+<p><strong>Definition.</strong> SVD exists for <strong>any</strong> real (or complex) matrix; no symmetry, squareness, or rank assumptions needed.<br>
+<strong>Purpose.</strong> A single, robust tool to analyze geometry (directions and gains) of any linear map.<br>
+<strong>Details.</strong> (A=U\Sigma V^\top) with orthonormal (U,V) and nonnegative singular values in (\Sigma). Right singular vectors (columns of (V)) form an orthonormal basis of input space; left singular vectors ((U)) of output space.</p>
+<h3 id="numerically-stable">(Numerically) Stable</h3>
+<p><a href="#sec-linear-algebra">see</a> • <a href="#sec-svd">see</a></p>
+<p><strong>Cheat table</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Symbols</td>
+<td>κ2(A) (condition number)</td>
+</tr>
+<tr>
+<td>Shape</td>
+<td>Scalar</td>
+</tr>
+<tr>
+<td>Typical use</td>
+<td>Algorithm selection; error amplification analysis</td>
+</tr>
+<tr>
+<td>Pitfalls</td>
+<td>Using explicit inverse instead of solve/QR/SVD</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tiny NumPy snippet</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Prefer solve to inverse</span>
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+A = np.random.randn(<span class="hljs-number">100</span>,<span class="hljs-number">100</span>); b = np.random.randn(<span class="hljs-number">100</span>)
+x1 = np.linalg.solve(A, b)        <span class="hljs-comment"># stable</span>
+x2 = np.linalg.inv(A) @ b         <span class="hljs-comment"># less stable</span>
+</div></code></pre>
+<p><strong>Definition.</strong> An algorithm is numerically stable if small input/rounding errors do not blow up in the output.<br>
+<strong>Purpose.</strong> Reliability in floating‑point computations.<br>
+<strong>Details.</strong> SVD/QR‑based solvers are stable; explicitly computing ((X^\top X)^{-1}) is <strong>unstable</strong> when (X) is ill‑conditioned (use SVD/QR instead).</p>
+<h3 id="compression-low%E2%80%91rank-compression">Compression (Low‑Rank Compression)</h3>
+<p><strong>Definition.</strong> Approximating a matrix (or dataset) by a lower‑rank representation retaining most of its “energy/variance.”<br>
+<strong>Purpose.</strong> Reduce storage and compute; denoise.<br>
+<strong>Details.</strong> Truncated SVD keeps the top (k) singular triplets: (A_k=\sum_{i=1}^k \sigma_i,\mathbf{u}_i\mathbf{v}_i^\top). This is optimal in Frobenius norm (Eckart–Young).</p>
+<h3 id="pseudoinverse-moore%E2%80%93penrose">Pseudoinverse (Moore–Penrose)</h3>
+<p><a href="#sec-pinv">see</a> • <a href="#sec-linreg">see</a></p>
+<p><strong>Cheat table</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Symbols</td>
+<td>A^+, Σ^+</td>
+</tr>
+<tr>
+<td>Shape</td>
+<td>A^+: n×m for A: m×n</td>
+</tr>
+<tr>
+<td>Typical use</td>
+<td>Least squares; minimum-norm solutions</td>
+</tr>
+<tr>
+<td>Pitfalls</td>
+<td>Zero/near-zero σ require thresholding (regularization)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tiny NumPy snippet</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># LS via pseudoinverse</span>
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+A = np.array([[<span class="hljs-number">1.</span>,<span class="hljs-number">0.</span>],[<span class="hljs-number">1.</span>,<span class="hljs-number">1.</span>],[<span class="hljs-number">1.</span>,<span class="hljs-number">2.</span>]])
+b = np.array([<span class="hljs-number">1.</span>,<span class="hljs-number">2.</span>,<span class="hljs-number">2.</span>])
+x = np.linalg.pinv(A) @ b
+</div></code></pre>
+<p><strong>Definition.</strong> The unique matrix (A^+) satisfying the Penrose conditions; computes minimum‑norm least‑squares solutions even when (A) is rectangular or rank‑deficient.<br>
+<strong>Purpose.</strong> Solve (\min_x|Ax-b|_2^2) robustly; handle under/overdetermined systems.<br>
+<strong>Details.</strong> Via SVD (A=U\Sigma V^\top), set (A^+=V\Sigma^+U^\top) where (\Sigma^+) inverts nonzero singular values and leaves zeros for near‑zero ones (regularization effect).</p>
+<h3 id="least-squares-ls">Least Squares (LS)</h3>
+<p><a href="#sec-linreg">see</a> • <a href="#sec-mcalc">see</a></p>
+<p><strong>Cheat table</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Symbols</td>
+<td>min_x</td>
+</tr>
+<tr>
+<td>Shape</td>
+<td>A: m×n, x: n, b: m</td>
+</tr>
+<tr>
+<td>Typical use</td>
+<td>Regression; projections; estimation under Gaussian noise</td>
+</tr>
+<tr>
+<td>Pitfalls</td>
+<td>Collinearity → ill-conditioning; prefer QR/SVD; consider ridge</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tiny NumPy snippet</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Gradient for LS</span>
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+A = np.random.randn(<span class="hljs-number">200</span>, <span class="hljs-number">10</span>)
+x = np.zeros(<span class="hljs-number">10</span>); b = np.random.randn(<span class="hljs-number">200</span>)
+grad = A.T @ (A @ x - b) / A.shape[<span class="hljs-number">0</span>]
+</div></code></pre>
+<p><strong>Definition.</strong> Optimization problem minimizing squared residuals: (\min_x |Ax-b|_2^2).<br>
+<strong>Purpose.</strong> Core of <strong>linear regression</strong>, system identification, and many estimators under Gaussian noise.<br>
+<strong>Details.</strong> Normal equations (A^\top A,x=A^\top b) (avoid explicit inverse); use QR/SVD for stability. See gradient PNG in the doc (LS gradient / Hessian).</p>
+<h3 id="rectangular-matrix">Rectangular Matrix</h3>
+<p><a href="#sec-pinv">see</a></p>
+<p><strong>Cheat table</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Symbols</td>
+<td>m×n (m != n)</td>
+</tr>
+<tr>
+<td>Shape</td>
+<td>Mapping ℝ^n → ℝ^m</td>
+</tr>
+<tr>
+<td>Typical use</td>
+<td>Over/under-determined systems; feature maps</td>
+</tr>
+<tr>
+<td>Pitfalls</td>
+<td>No standard inverse; use pseudoinverse</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tiny NumPy snippet</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Overdetermined vs underdetermined</span>
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+A_over = np.random.randn(<span class="hljs-number">200</span>, <span class="hljs-number">10</span>)  <span class="hljs-comment"># m&gt;n</span>
+A_under = np.random.randn(<span class="hljs-number">10</span>, <span class="hljs-number">200</span>) <span class="hljs-comment"># m&lt;n</span>
+</div></code></pre>
+<p><strong>Definition.</strong> A non‑square matrix (A\in\mathbb{R}^{m\times n}) with (m\ne n).<br>
+<strong>Purpose.</strong> Models mappings between spaces of different dimensions (e.g., more samples than features or vice versa).<br>
+<strong>Details.</strong> In LS: <strong>overdetermined</strong> ((m&gt;n)) — many equations; <strong>underdetermined</strong> ((m&lt;n)) — many solutions, pick minimum‑norm via (A^+).</p>
+<h3 id="rank%E2%80%91deficient">Rank‑Deficient</h3>
+<p><strong>Definition.</strong> A matrix whose rank is less than (\min(m,n)).<br>
+<strong>Purpose.</strong> Signals redundancy or collinearity in features; impacts identifiability and conditioning.<br>
+<strong>Details.</strong> LS problems become ill‑posed; (A^+) (via SVD) yields the minimum‑norm solution; regularization (ridge) improves generalization and stability.</p>
+<h3 id="linearization">Linearization</h3>
+<p><a href="#sec-mcalc">see</a></p>
+<p><strong>Cheat table</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Symbols</td>
+<td>J_f (Jacobian)</td>
+</tr>
+<tr>
+<td>Shape</td>
+<td>m×n</td>
+</tr>
+<tr>
+<td>Typical use</td>
+<td>Local analysis; Gauss–Newton; EKF</td>
+</tr>
+<tr>
+<td>Pitfalls</td>
+<td>Poor far from expansion point; curvature ignored</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tiny NumPy snippet</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># First-order linearization</span>
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">f</span><span class="hljs-params">(x)</span>:</span> <span class="hljs-keyword">return</span> np.array([x[<span class="hljs-number">0</span>]**<span class="hljs-number">2</span>, x[<span class="hljs-number">0</span>]*x[<span class="hljs-number">1</span>]])
+x0 = np.array([<span class="hljs-number">1.</span>,<span class="hljs-number">2.</span>]); eps = <span class="hljs-number">1e-6</span>
+J = np.array([[<span class="hljs-number">2</span>*x0[<span class="hljs-number">0</span>], <span class="hljs-number">0.</span>],
+              [x0[<span class="hljs-number">1</span>],   x0[<span class="hljs-number">0</span>]]])
+dx = np.array([<span class="hljs-number">1e-3</span>, <span class="hljs-number">-2e-3</span>])
+approx = f(x0) + J @ dx
+</div></code></pre>
+<p><strong>Definition.</strong> Approximating a nonlinear function near a point by its first‑order Taylor expansion: (f(x)\approx f(x_0)+J_f(x_0)(x-x_0)).<br>
+<strong>Purpose.</strong> Analyze/optimize complex models locally; basis of Gauss–Newton, EKF, and backprop’s local derivatives.<br>
+<strong>Details.</strong> Valid in a neighborhood where higher‑order terms are small; accuracy depends on curvature (Hessian).</p>
+<h3 id="backprop-backpropagation">Backprop (Backpropagation)</h3>
+<p><a href="#sec-mcalc">see</a></p>
+<p><strong>Cheat table</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Symbols</td>
+<td>chain rule; VJP/JVP</td>
+</tr>
+<tr>
+<td>Shape</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Typical use</td>
+<td>Compute ∇ loss for deep nets</td>
+</tr>
+<tr>
+<td>Pitfalls</td>
+<td>Vanishing/exploding gradients; memory use</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tiny NumPy snippet</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Manual chain rule for simple composition</span>
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-comment"># y = g(f(x)), f(x)=Wx, g(z)=tanh(z)</span>
+W = np.random.randn(<span class="hljs-number">3</span>,<span class="hljs-number">4</span>); x = np.random.randn(<span class="hljs-number">4</span>)
+z = W @ x
+y = np.tanh(z)
+<span class="hljs-comment"># dL/dy given (e.g., ones)</span>
+dL_dy = np.ones_like(y)
+dL_dz = dL_dy * (<span class="hljs-number">1</span> - y**<span class="hljs-number">2</span>)
+dL_dW = np.outer(dL_dz, x)
+dL_dx = W.T @ dL_dz
+</div></code></pre>
+<p><strong>Definition.</strong> Efficient algorithm to compute gradients of scalar losses through composite functions (neural nets) using the chain rule in reverse.<br>
+<strong>Purpose.</strong> Enables training deep networks by gradient‑based optimization.<br>
+<strong>Details.</strong> Implements repeated <strong>vector‑Jacobian</strong> products; memory‑efficient variants (checkpointing) trade compute for memory.</p>
+<h3 id="curvature">Curvature</h3>
+<p><a href="#sec-mcalc">see</a></p>
+<p><strong>Cheat table</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Symbols</td>
+<td>H (Hessian), eigenvalues of H</td>
+</tr>
+<tr>
+<td>Shape</td>
+<td>n×n</td>
+</tr>
+<tr>
+<td>Typical use</td>
+<td>Step-size selection; trust regions</td>
+</tr>
+<tr>
+<td>Pitfalls</td>
+<td>Indefinite H → saddle points; noise in estimates</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tiny NumPy snippet</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Directional curvature along p: p^T H p</span>
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+H = np.array([[<span class="hljs-number">2.</span>,<span class="hljs-number">1.</span>],[<span class="hljs-number">1.</span>,<span class="hljs-number">2.</span>]])
+p = np.array([<span class="hljs-number">1.</span>, <span class="hljs-number">-1.</span>]); p /= np.linalg.norm(p)
+curv = p @ (H @ p)
+</div></code></pre>
+<p><strong>Definition.</strong> Second‑order behavior captured by the <strong>Hessian</strong>; tells how gradients change with position.<br>
+<strong>Purpose.</strong> Drives step‑size choice, trust‑region radii, and convergence speed.<br>
+<strong>Details.</strong> Large eigenvalues ⇒ steep directions; tiny eigenvalues ⇒ flat/ill‑conditioned directions; negative eigenvalues indicate saddle/non‑convex regions.</p>
+<h3 id="newton-newtons-method--newton%E2%80%93raphson">Newton (Newton’s Method / Newton–Raphson)</h3>
+<p><a href="#sec-mcalc">see</a></p>
+<p><strong>Cheat table</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Symbols</td>
+<td>x_{k+1} = x_k - H^{-1} ∇f</td>
+</tr>
+<tr>
+<td>Shape</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Typical use</td>
+<td>Fast local convergence</td>
+</tr>
+<tr>
+<td>Pitfalls</td>
+<td>Expensive; requires PD H or damping</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tiny NumPy snippet</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># One Newton step on f(x)=1/2 x^T H x - b^T x</span>
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+H = np.array([[<span class="hljs-number">3.</span>,<span class="hljs-number">0.</span>],[<span class="hljs-number">0.</span>,<span class="hljs-number">1.</span>]]); b = np.array([<span class="hljs-number">1.</span>,<span class="hljs-number">2.</span>])
+x = np.zeros(<span class="hljs-number">2</span>)
+x_next = x - np.linalg.solve(H, H @ x - b)  <span class="hljs-comment"># = H^{-1} b</span>
+</div></code></pre>
+<p><strong>Definition.</strong> Second‑order optimization method updating (x_{k+1}=x_k - H^{-1}\nabla f(x_k)).<br>
+<strong>Purpose.</strong> Achieve <strong>quadratic</strong> local convergence near a well‑behaved optimum.<br>
+<strong>Details.</strong> Exact Hessians are expensive; <strong>quasi‑Newton</strong> (BFGS/L‑BFGS) build low‑rank Hessian approximations using gradients only; <strong>Hessian‑vector products</strong> enable CG‑Newton without forming (H).</p>
+
+</body>
+
+</html>
