@@ -29,6 +29,7 @@
 ---
 
 ## 1) Linear Algebra Essentials
+<a id="sec-linear-algebra"></a>
 
 ### 1.1 Vectors, matrices, tensors, and shapes
 
@@ -102,6 +103,7 @@ y = A @ x                          # shape (2,)
 ---
 
 ## 2) Norms, Inner Products, and Inequalities
+<a id="sec-norms"></a>
 
 ### 2.1 Vector norms (how we measure size)
 
@@ -156,6 +158,7 @@ Angle-based similarity used in embeddings:
 ---
 
 ## 3) Eigenvalues & Eigenvectors (definition, purpose, intuition)
+<a id="sec-eig"></a>
 
 Definition:  
 ![](./assets/f_eig.png)
@@ -165,6 +168,7 @@ Why useful: spectral theorem (symmetric matrices), PCA, graph Laplacians, power 
 ---
 
 ## 4) Singular Value Decomposition (SVD)
+<a id="sec-svd"></a>
 
 Works for any $m\times n$ matrix:  
 ![](./assets/f_svd.png) with descending singular values.
@@ -177,6 +181,7 @@ PCA via SVD: principal directions in $V$, variances in $\Sigma^2/(n-1)$.
 ---
 
 ## 5) Moore–Penrose Pseudoinverse
+<a id="sec-pinv"></a>
 
 Via SVD:  
 ![](./assets/f_pinv.png)
@@ -186,6 +191,7 @@ Least squares: $\hat{\mathbf{x}}=A^+\mathbf{b}$ for over/under-determined system
 ---
 
 ## 6) Matrix Calculus Cheat Sheet — Jacobian, Gradient, Hessian (with shapes)
+<a id="sec-mcalc"></a>
 
 - Jacobian:  
   ![](./assets/f_jacobian.png)
@@ -201,6 +207,7 @@ Least-squares gradient (and $H=A^\top A$):
 ---
 
 ## 7) Worked Example — Linear Regression (closed form, GD, ridge)
+<a id="sec-linreg"></a>
 
 Objective, gradients, and ridge closed form:  
 ![](./assets/f_ridge_closed.png)
@@ -234,6 +241,7 @@ for _ in range(2000):
 ## 8) Quick definitions & interview-ready notes
 
 ## 8) Quick Definitions — Expanded & Interview‑Ready
+<a id="sec-quick"></a>
 
 ### Eigenvalues & Eigenvectors
 ![](./assets/f_eig.png)
@@ -446,33 +454,163 @@ H_g =
 ---
 
 ## Glossary — Terms and Abbreviations in the Quick Notes (Fully Explained)
+<a id="sec-glossary"></a>
 
 ### Axes (Principal Axes)
+[see](#sec-eig) • [see](#sec-svd)
+
+**Cheat table**
+
+| Field | Value |
+|---|---|
+| Symbols | principal axes, PCs |
+| Shape | Each axis is a unit vector in ℝ^d |
+| Typical use | Projection, visualization, compression, denoising |
+| Pitfalls | Non-centered data skews directions; scale features first |
+
+**Tiny NumPy snippet**
+
+```python
+# Principal axes via SVD (center first)
+import numpy as np
+X = np.random.randn(200, 5)
+Xc = X - X.mean(axis=0, keepdims=True)
+U, S, Vt = np.linalg.svd(Xc, full_matrices=False)
+principal_axes = Vt.T  # columns are axes
+```
+
 **Definition.** Coordinate directions used to describe data or a linear map. In PCA or spectral analyses, **principal axes** are orthonormal directions along which data variance is extremal.  
 **Purpose.** Provide an interpretable basis to project, visualize, compress, and denoise data.  
 **Details.** The principal axes are the eigenvectors of the covariance matrix (or right singular vectors from SVD of the centered data matrix). Projections onto the first few axes retain most variance.
 
 ### Scaling (in Eigenanalysis)
+[see](#sec-eig)
+
+**Cheat table**
+
+| Field | Value |
+|---|---|
+| Symbols | λ (eigenvalue) |
+| Shape | Scalar |
+| Typical use | Growth/decay along eigen-directions; stability |
+| Pitfalls | Negative λ flips direction; complex pairs for non-symmetric A |
+
+**Tiny NumPy snippet**
+
+```python
+# Scaling along an eigenvector
+import numpy as np
+A = np.array([[2.,1.],[1.,2.]])
+w, V = np.linalg.eig(A)
+v = V[:, 0]; lam = w[0]
+np.allclose(A @ v, lam * v)  # True
+```
+
 **Definition.** The multiplicative change of a vector in a specific direction under a linear map. If \(A\mathbf{v}=\lambda \mathbf{v}\), the factor \(\lambda\) is the **scaling** along eigenvector \(\mathbf{v}\).  
 **Purpose.** Explains how transformations stretch or contract space; used in stability, conditioning, and mode analysis.  
 **Details.** Negative \(\lambda\) flips direction; \(|\lambda|>1\) expands, \(|\lambda|<1\) contracts.
 
 ### PCA (Principal Component Analysis)
+[see](#sec-svd)
+
+**Cheat table**
+
+| Field | Value |
+|---|---|
+| Symbols | PCs, Σ (singular values) |
+| Shape | PCs: d×d (orthonormal); variances: diag(Σ^2)/(n-1) |
+| Typical use | Dimensionality reduction, denoising, feature decorrelation |
+| Pitfalls | Sensitive to scaling/outliers; not supervised |
+
+**Tiny NumPy snippet**
+
+```python
+# PCA via SVD: explained variance
+import numpy as np
+X = np.random.randn(300, 10)
+Xc = X - X.mean(axis=0, keepdims=True)
+U, S, Vt = np.linalg.svd(Xc, full_matrices=False)
+explained = (S**2) / (Xc.shape[0]-1)
+explained_ratio = explained / explained.sum()
+```
+
 **Definition.** Orthogonal linear transform that rotates data to a basis of maximal variance directions.  
 **Purpose.** **Dimensionality reduction**, **compression**, **denoising**, and **visualization**.  
 **Details.** For centered data \(X\), SVD \(X=U\Sigma V^\top\) yields principal components (columns of \(V\)); variances are \(\Sigma^2/(n-1)\). The first \(k\) components explain the largest portion of variance.
 
 ### Stability (Optimization / Dynamics / Linear Systems)
+[see](#sec-eig) • [see](#sec-mcalc)
+
+**Cheat table**
+
+| Field | Value |
+|---|---|
+| Symbols | ρ(A) (spectral radius), λ_max(H) |
+| Shape | Scalars |
+| Typical use | Choose LR bounds; judge convergence of iterations |
+| Pitfalls | Using too large LR; ignoring non-normality in A |
+
+**Tiny NumPy snippet**
+
+```python
+# GD stability on a quadratic: eta < 2 / lambda_max(H)
+import numpy as np
+H = np.array([[2.,1.],[1.,2.]])
+lam_max = np.linalg.eigvalsh(H).max()
+eta_stable = 2.0 / lam_max
+```
+
 **Definition.** A property describing whether iterates or trajectories remain bounded or converge (vs. diverge).  
 **Purpose.** Guarantees predictable training and robust systems.  
 **Details.** In gradient descent on a quadratic with Hessian \(H\), step size \(\eta\) must satisfy \(0<\eta<2/\lambda_{\max}(H)\) to ensure stability. In discrete linear systems \(x_{t+1}=Ax_t\), stability requires spectral radius \(\rho(A)<1\).
 
 ### Universal (re: SVD as a universal factorization)
+[see](#sec-svd)
+
+**Cheat table**
+
+| Field | Value |
+|---|---|
+| Symbols | U, Σ, V^T |
+| Shape | U: m×m, Σ: m×n, V^T: n×n |
+| Typical use | Geometry of any linear map; diagnostics |
+| Pitfalls | Dense SVD is O(m n min(m,n)) — heavy for large dense matrices |
+
+**Tiny NumPy snippet**
+
+```python
+# SVD exists for any matrix (rectangular too)
+import numpy as np
+A = np.random.randn(6, 3)
+U, S, Vt = np.linalg.svd(A, full_matrices=False)
+```
+
 **Definition.** SVD exists for **any** real (or complex) matrix; no symmetry, squareness, or rank assumptions needed.  
 **Purpose.** A single, robust tool to analyze geometry (directions and gains) of any linear map.  
 **Details.** \(A=U\Sigma V^\top\) with orthonormal \(U,V\) and nonnegative singular values in \(\Sigma\). Right singular vectors (columns of \(V\)) form an orthonormal basis of input space; left singular vectors (\(U\)) of output space.
 
 ### (Numerically) Stable
+[see](#sec-linear-algebra) • [see](#sec-svd)
+
+**Cheat table**
+
+| Field | Value |
+|---|---|
+| Symbols | κ2(A) (condition number) |
+| Shape | Scalar |
+| Typical use | Algorithm selection; error amplification analysis |
+| Pitfalls | Using explicit inverse instead of solve/QR/SVD |
+
+**Tiny NumPy snippet**
+
+```python
+# Prefer solve to inverse
+import numpy as np
+A = np.random.randn(100,100); b = np.random.randn(100)
+x1 = np.linalg.solve(A, b)        # stable
+x2 = np.linalg.inv(A) @ b         # less stable
+```
+
 **Definition.** An algorithm is numerically stable if small input/rounding errors do not blow up in the output.  
 **Purpose.** Reliability in floating‑point computations.  
 **Details.** SVD/QR‑based solvers are stable; explicitly computing \((X^\top X)^{-1}\) is **unstable** when \(X\) is ill‑conditioned (use SVD/QR instead).
@@ -483,16 +621,78 @@ H_g =
 **Details.** Truncated SVD keeps the top \(k\) singular triplets: \(A_k=\sum_{i=1}^k \sigma_i\,\mathbf{u}_i\mathbf{v}_i^\top\). This is optimal in Frobenius norm (Eckart–Young).
 
 ### Pseudoinverse (Moore–Penrose)
+[see](#sec-pinv) • [see](#sec-linreg)
+
+**Cheat table**
+
+| Field | Value |
+|---|---|
+| Symbols | A^+, Σ^+ |
+| Shape | A^+: n×m for A: m×n |
+| Typical use | Least squares; minimum-norm solutions |
+| Pitfalls | Zero/near-zero σ require thresholding (regularization) |
+
+**Tiny NumPy snippet**
+
+```python
+# LS via pseudoinverse
+import numpy as np
+A = np.array([[1.,0.],[1.,1.],[1.,2.]])
+b = np.array([1.,2.,2.])
+x = np.linalg.pinv(A) @ b
+```
+
 **Definition.** The unique matrix \(A^+\) satisfying the Penrose conditions; computes minimum‑norm least‑squares solutions even when \(A\) is rectangular or rank‑deficient.  
 **Purpose.** Solve \(\min_x\|Ax-b\|_2^2\) robustly; handle under/overdetermined systems.  
 **Details.** Via SVD \(A=U\Sigma V^\top\), set \(A^+=V\Sigma^+U^\top\) where \(\Sigma^+\) inverts nonzero singular values and leaves zeros for near‑zero ones (regularization effect).
 
 ### Least Squares (LS)
+[see](#sec-linreg) • [see](#sec-mcalc)
+
+**Cheat table**
+
+| Field | Value |
+|---|---|
+| Symbols | min_x ||Ax-b||_2^2 |
+| Shape | A: m×n, x: n, b: m |
+| Typical use | Regression; projections; estimation under Gaussian noise |
+| Pitfalls | Collinearity → ill-conditioning; prefer QR/SVD; consider ridge |
+
+**Tiny NumPy snippet**
+
+```python
+# Gradient for LS
+import numpy as np
+A = np.random.randn(200, 10)
+x = np.zeros(10); b = np.random.randn(200)
+grad = A.T @ (A @ x - b) / A.shape[0]
+```
+
 **Definition.** Optimization problem minimizing squared residuals: \(\min_x \|Ax-b\|_2^2\).  
 **Purpose.** Core of **linear regression**, system identification, and many estimators under Gaussian noise.  
 **Details.** Normal equations \(A^\top A\,x=A^\top b\) (avoid explicit inverse); use QR/SVD for stability. See gradient PNG in the doc (LS gradient / Hessian).
 
 ### Rectangular Matrix
+[see](#sec-pinv)
+
+**Cheat table**
+
+| Field | Value |
+|---|---|
+| Symbols | m×n (m != n) |
+| Shape | Mapping ℝ^n → ℝ^m |
+| Typical use | Over/under-determined systems; feature maps |
+| Pitfalls | No standard inverse; use pseudoinverse |
+
+**Tiny NumPy snippet**
+
+```python
+# Overdetermined vs underdetermined
+import numpy as np
+A_over = np.random.randn(200, 10)  # m>n
+A_under = np.random.randn(10, 200) # m<n
+```
+
 **Definition.** A non‑square matrix \(A\in\mathbb{R}^{m\times n}\) with \(m\ne n\).  
 **Purpose.** Models mappings between spaces of different dimensions (e.g., more samples than features or vice versa).  
 **Details.** In LS: **overdetermined** (\(m>n\)) — many equations; **underdetermined** (\(m<n\)) — many solutions, pick minimum‑norm via \(A^+\).
@@ -503,21 +703,114 @@ H_g =
 **Details.** LS problems become ill‑posed; \(A^+\) (via SVD) yields the minimum‑norm solution; regularization (ridge) improves generalization and stability.
 
 ### Linearization
+[see](#sec-mcalc)
+
+**Cheat table**
+
+| Field | Value |
+|---|---|
+| Symbols | J_f (Jacobian) |
+| Shape | m×n |
+| Typical use | Local analysis; Gauss–Newton; EKF |
+| Pitfalls | Poor far from expansion point; curvature ignored |
+
+**Tiny NumPy snippet**
+
+```python
+# First-order linearization
+import numpy as np
+def f(x): return np.array([x[0]**2, x[0]*x[1]])
+x0 = np.array([1.,2.]); eps = 1e-6
+J = np.array([[2*x0[0], 0.],
+              [x0[1],   x0[0]]])
+dx = np.array([1e-3, -2e-3])
+approx = f(x0) + J @ dx
+```
+
 **Definition.** Approximating a nonlinear function near a point by its first‑order Taylor expansion: \(f(x)\approx f(x_0)+J_f(x_0)(x-x_0)\).  
 **Purpose.** Analyze/optimize complex models locally; basis of Gauss–Newton, EKF, and backprop’s local derivatives.  
 **Details.** Valid in a neighborhood where higher‑order terms are small; accuracy depends on curvature (Hessian).
 
 ### Backprop (Backpropagation)
+[see](#sec-mcalc)
+
+**Cheat table**
+
+| Field | Value |
+|---|---|
+| Symbols | chain rule; VJP/JVP |
+| Shape | — |
+| Typical use | Compute ∇ loss for deep nets |
+| Pitfalls | Vanishing/exploding gradients; memory use |
+
+**Tiny NumPy snippet**
+
+```python
+# Manual chain rule for simple composition
+import numpy as np
+# y = g(f(x)), f(x)=Wx, g(z)=tanh(z)
+W = np.random.randn(3,4); x = np.random.randn(4)
+z = W @ x
+y = np.tanh(z)
+# dL/dy given (e.g., ones)
+dL_dy = np.ones_like(y)
+dL_dz = dL_dy * (1 - y**2)
+dL_dW = np.outer(dL_dz, x)
+dL_dx = W.T @ dL_dz
+```
+
 **Definition.** Efficient algorithm to compute gradients of scalar losses through composite functions (neural nets) using the chain rule in reverse.  
 **Purpose.** Enables training deep networks by gradient‑based optimization.  
 **Details.** Implements repeated **vector‑Jacobian** products; memory‑efficient variants (checkpointing) trade compute for memory.
 
 ### Curvature
+[see](#sec-mcalc)
+
+**Cheat table**
+
+| Field | Value |
+|---|---|
+| Symbols | H (Hessian), eigenvalues of H |
+| Shape | n×n |
+| Typical use | Step-size selection; trust regions |
+| Pitfalls | Indefinite H → saddle points; noise in estimates |
+
+**Tiny NumPy snippet**
+
+```python
+# Directional curvature along p: p^T H p
+import numpy as np
+H = np.array([[2.,1.],[1.,2.]])
+p = np.array([1., -1.]); p /= np.linalg.norm(p)
+curv = p @ (H @ p)
+```
+
 **Definition.** Second‑order behavior captured by the **Hessian**; tells how gradients change with position.  
 **Purpose.** Drives step‑size choice, trust‑region radii, and convergence speed.  
 **Details.** Large eigenvalues ⇒ steep directions; tiny eigenvalues ⇒ flat/ill‑conditioned directions; negative eigenvalues indicate saddle/non‑convex regions.
 
 ### Newton (Newton’s Method / Newton–Raphson)
+[see](#sec-mcalc)
+
+**Cheat table**
+
+| Field | Value |
+|---|---|
+| Symbols | x_{k+1} = x_k - H^{-1} ∇f |
+| Shape | — |
+| Typical use | Fast local convergence |
+| Pitfalls | Expensive; requires PD H or damping |
+
+**Tiny NumPy snippet**
+
+```python
+# One Newton step on f(x)=1/2 x^T H x - b^T x
+import numpy as np
+H = np.array([[3.,0.],[0.,1.]]); b = np.array([1.,2.])
+x = np.zeros(2)
+x_next = x - np.linalg.solve(H, H @ x - b)  # = H^{-1} b
+```
+
 **Definition.** Second‑order optimization method updating \(x_{k+1}=x_k - H^{-1}\nabla f(x_k)\).  
 **Purpose.** Achieve **quadratic** local convergence near a well‑behaved optimum.  
 **Details.** Exact Hessians are expensive; **quasi‑Newton** (BFGS/L‑BFGS) build low‑rank Hessian approximations using gradients only; **Hessian‑vector products** enable CG‑Newton without forming \(H\).
