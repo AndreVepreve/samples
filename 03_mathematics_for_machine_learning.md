@@ -22,40 +22,71 @@
 
 ## 1) Linear Algebra Essentials
 
-**Vectors, matrices, tensors.** We use bold lowercase for vectors (\\(\\mathbf{x}\\in\\mathbb{R}^n\\)), uppercase for matrices (\\(A \\in \\mathbb{R}^{m\\times n}\\)). A dataset with \\(m\\) rows and \\(n\\) features is\\(\\;X\\in\\mathbb{R}^{m\\times n}\\). Column \\(j\\) is \\(X_{:j}\\).
+**What this section gives you.** The minimum set of objects and identities you’ll actually use in ML code and derivations.
 
-**Shapes that matter.**  
-- Matrix–vector: \\(A\\mathbf{x}\\in\\mathbb{R}^m\\).  
-- Matrix–matrix: \\(AB\\) valid only if inner dims agree (\\(A\\in\\mathbb{R}^{m\\times n}, B\\in\\mathbb{R}^{n\\times p}\\)).  
-- Elementwise (Hadamard) product: \\(A\\circ B\\) requires identical shape.  
+**Objects & notation**
+- **Scalars** \(a\in\mathbb{R}\), **vectors** \(\mathbf{x}\in\mathbb{R}^n\), **matrices** \(A\in\mathbb{R}^{m\times n}\), **tensors** (higher‑order arrays).
+- **Standard basis** \(e_i\): all zeros except a 1 in position \(i\); any \(\mathbf{x}\) can be written \(\sum_i x_i e_i\).
+- **Identity** \(I\), **zero** \(0\); **transpose** \(A^\top\); **symmetric** \(A=A^\top\); **SPD/PSD** \(A\succ 0/A\succeq 0\).
 
-**Range, null space, rank.**  
-- \\(\\mathcal{R}(A)=\\{A\\mathbf{x}\\}\\) (column space).  
-- \\(\\mathcal{N}(A)=\\{\\mathbf{x}:A\\mathbf{x}=\\mathbf{0}\\}\\).  
-- Rank is the dimension of \\(\\mathcal{R}(A)\\); by the rank–nullity theorem\\(\\;\\dim\\mathcal{N}(A)=n-\\mathrm{rank}(A)\\) for \\(A\\in\\mathbb{R}^{m\\times n}\\).
+**Linear combinations, span, independence**
+- A **linear combination** is \(\sum_i \alpha_i \mathbf{v}_i\).  
+- The **span** of \(\{\mathbf{v}_i\}\) is all their linear combinations.  
+- Vectors are **linearly independent** if only the trivial combination gives zero.  
+- **Rank** of \(A\): dimension of its column space; by **rank–nullity**, for \(A\in\mathbb{R}^{m\times n}\): \(\dim \mathcal{N}(A)=n-\operatorname{rank}(A)\).
 
-**Quadratic forms & PSD.** For symmetric \\(Q\\), the map \\(\\mathbf{x}\\mapsto \\mathbf{x}^T Q\\mathbf{x}\\) is a quadratic form. \\(Q\\succeq 0\\) (positive semidefinite) iff \\(\\mathbf{x}^T Q\\mathbf{x}\\ge 0\\;\\forall\\,\\mathbf{x}\\).
+**Linear maps as matrices**
+A matrix \(A\) is a linear map. Shapes tell you legality and cost:
+- Matrix–vector \(A\mathbf{x}\in\mathbb{R}^m\), cost \(\mathcal{O}(mn)\).  
+- Matrix–matrix \(AB\) defined when inner dims agree.  
+- Block matrices let you express concatenation/partitioning cleanly.
 
----
+**Orthogonality & projections**
+Two vectors are **orthogonal** if \(\mathbf{x}^\top\mathbf{y}=0\). The **orthogonal projector** onto the column space of full‑column‑rank \(A\) is
+```math
+P = A(A^\top A)^{-1}A^\top,
+```
+so \(P\mathbf{b}\) is the closest point in \(\mathcal{R}(A)\) to \(\mathbf{b}\).
+
+**Quadratic forms**
+A symmetric \(Q\) defines \(q(\mathbf{x})=\mathbf{x}^\top Q \mathbf{x}\). If \(Q\succeq 0\) then \(q(\mathbf{x})\ge 0\). In ML this shows up in losses (least squares), regularizers (ridge), and curvature (Hessians).
+
+**Why ML cares (purpose)**
+- Shapes/rank explain *what you can compute* (e.g., when normal equations are solvable).  
+- Projections = least squares; orthogonality underlies PCA and gradient steps.  
+- Quadratic forms capture energy/variance and connect to curvature.
 
 ## 2) Norms, Inner Products, and Inequalities
 
-**Vector norms.** \\(\\|\\mathbf{x}\\|_2=(\\sum_i x_i^2)^{1/2}\\), \\(\\|\\mathbf{x}\\|_1=\\sum_i|x_i|\\), \\(\\|\\mathbf{x}\\|_\\infty=\\max_i|x_i|\\).  
-**Matrix norms.** Frobenius: \\(\\|A\\|_F=\\sqrt{\\sum_{ij} a_{ij}^2}=\\sqrt{\\mathrm{tr}(A^T A)}\\). Spectral \\(\\|A\\|_2=\\sigma_{\\max}(A)\\).
+**Why norms/inner products?** They formalize *size*, *distance*, and *angles*—the core of optimization, regularization, and geometry in ML.
 
-**Inner product & Cauchy–Schwarz.**
-$$
-\langle \\mathbf{x},\\mathbf{y}\\rangle = \\mathbf{x}^T\\!\\mathbf{y},\\qquad
-|\\langle \\mathbf{x},\\mathbf{y}\\rangle|\\le \\|\\mathbf{x}\\|_2\\,\\|\\mathbf{y}\\|_2.
-$$
-Equality holds iff \\(\\mathbf{x},\\mathbf{y}\\) are linearly dependent.
+**Vector norms**
+- \( \ell_2 \): \( \|\mathbf{x}\|_2 = (\sum_i x_i^2)^{1/2} \) (rotation‑invariant).  
+- \( \ell_1 \): \( \|\mathbf{x}\|_1 = \sum_i |x_i| \) (promotes sparsity; used in lasso).  
+- \( \ell_\infty \): \( \|\mathbf{x}\|_\infty = \max_i |x_i| \) (adversarial \(\epsilon\)-balls).  
+All norms on finite‑dimensional spaces are equivalent, but constants matter for optimization.
 
-**Triangle inequality.**
-$$
-\\|\\mathbf{x}+\\mathbf{y}\\|_2\\le \\|\\mathbf{x}\\|_2+\\|\\mathbf{y}\\|_2.
-$$
+**Matrix norms**
+- **Frobenius**: \( \|A\|_F = \sqrt{\sum_{ij} a_{ij}^2} = \sqrt{\operatorname{tr}(A^\top A)} \).  
+- **Spectral/Operator 2‑norm**: \( \|A\|_2 = \sigma_{\max}(A) \) (largest singular value).  
+- **Induced p‑norms**: \( \|A\|_p = \max_{\|\mathbf{x}\|_p=1}\|A\mathbf{x}\|_p \).
 
----
+**Inner products & geometry**
+```math
+\langle \mathbf{x}, \mathbf{y} \rangle = \mathbf{x}^\top \mathbf{y}, \qquad
+|\langle \mathbf{x}, \mathbf{y} \rangle| \le \|\mathbf{x}\|_2 \,\|\mathbf{y}\|_2 \quad\text{(Cauchy–Schwarz)}.
+```
+Angles via \( \cos\theta = \frac{\langle \mathbf{x},\mathbf{y}\rangle}{\|\mathbf{x}\|\,\|\mathbf{y}\|} \).
+
+**Inequalities you actually use**
+- **Triangle**: \( \|\mathbf{x}+\mathbf{y}\| \le \|\mathbf{x}\|+\|\mathbf{y}\| \).  
+- **H\"older/Minkowski**: generalize Cauchy–Schwarz/triangle to \(p\)-norms.  
+- **Submultiplicativity**: \( \|AB\| \le \|A\|\,\|B\| \).
+
+**Purpose in ML**
+- Norms define **regularizers** (L1/L2), **constraints**, **early stopping** targets.  
+- Inner products drive **similarity** (cosine) and **projections**; inequalities bound errors and prove convergence.  
+- Operator norms give **Lipschitz constants** and stability estimates.
 
 ## 3) Matrix Identities You’ll Use Every Day
 
@@ -69,13 +100,20 @@ $$
 - SPD \\(A\\Rightarrow \\det(A)>0\\).
 
 **Rank inequalities.**
-$$
+
+```math
 \\mathrm{rank}(AB)\\le \\min\\{\\mathrm{rank}(A),\\mathrm{rank}(B)\\}.
-$$
+```
 
 ---
 
 ## 4) Eigenvalues, Spectral Theorem & SVD
+
+#### Definitions & Purpose (Eigen / SVD)
+- **Eigenvalue/Eigenvector — Definition.** Non‑zero \(x\) with \(Ax=\lambda x\); \(\lambda\) is the eigenvalue.
+- **Eigenvalue/Eigenvector — Purpose.** Reveals invariant directions and stretch factors of a linear map; key in stability, PCA of covariance, and power iterations.
+- **SVD — Definition.** Factorization \(A = U\Sigma V^\top\) with orthonormal \(U,V\) and non‑negative singular values on \(\Sigma\).
+- **SVD — Purpose.** Universal for any rectangular matrix; gives low‑rank approximation (Eckart–Young), conditioning insight, and numerically stable bases for least squares.
 
 ### 4.1 Diagonalizability, Eigenspaces, and Multiplicities
 
@@ -101,18 +139,23 @@ Diagonalizability is the special case where **all** blocks are size \(1\).
 
 
 **Eigen‑decomposition (symmetric).** If \\(A=A^T\\), then there exists an orthonormal basis of eigenvectors \\(U=[\\mathbf{u}_1\\cdots \\mathbf{u}_n]\\) and real eigenvalues \\(\\lambda_i\\) such that
-$$
+
+```math
 A = U\\,\\mathrm{diag}(\\lambda_1,\\ldots,\\lambda_n)\\,U^T.
-$$
+```
+
 This is the **spectral theorem**. Quadratic forms decouple:
-$$
+
+```math
 \\mathbf{x}^T A \\mathbf{x} = \\sum_i \\lambda_i\\,(\\mathbf{u}_i^T\\mathbf{x})^2.
-$$
+```
 
 **Singular Value Decomposition (SVD).** For any \\(A\\in\\mathbb{R}^{m\\times n}\\),
-$$
+
+```math
 A = U\\,\\Sigma\\,V^T,\\qquad U\\in\\mathbb{R}^{m\\times m},\\; V\\in\\mathbb{R}^{n\\times n},\\; \\Sigma=\\mathrm{diag}(\\sigma_1\\!\\ge\\!\\cdots\\!\\ge\\!\\sigma_r\\!\\ge\\!0).
-$$
+```
+
 Columns of \\(U\\) and \\(V\\) are orthonormal left/right singular vectors; \\(\\sigma_i\\) are singular values.  
 **Best rank‑k approximation (Eckart–Young).** Truncate to the top \\(k\\) singular values: \\(A_k=U_{:k}\\Sigma_{:k,:k}V_{:k}^T\\) minimizes \\(\\|A-A_k\\|_F\\).
 
@@ -122,15 +165,22 @@ Columns of \\(U\\) and \\(V\\) are orthonormal left/right singular vectors; \\(\
 
 ## 5) Pseudoinverse & Least‑Squares Geometry
 
+#### Definitions & Purpose (Pseudoinverse)
+- **Moore–Penrose pseudoinverse — Definition.** \(A^+\) is the unique matrix satisfying the four Penrose conditions; via SVD, \(A^+=V\Sigma^+ U^\top\).
+- **Moore–Penrose pseudoinverse — Purpose.** Produces least‑squares and minimum‑norm solutions for inconsistent/underdetermined systems and enables stable regression.
+
 **Moore–Penrose pseudoinverse.** Defined for any \\(A\\): the unique matrix \\(A^+\\) satisfying the four Penrose conditions. If \\(A=U\\Sigma V^T\\), then
-$$
+
+```math
 A^+=V\\,\\Sigma^+\\,U^T,\\quad \\Sigma^+_{ii}=\\begin{cases}1/\\sigma_i,&\\sigma_i>0\\\\0,&\\sigma_i=0.\\end{cases}
-$$
+```
 
 **Least squares.** For overdetermined \\(A\\mathbf{x}\\approx \\mathbf{b}\\), the solution minimizing \\(\\|A\\mathbf{x}-\\mathbf{b}\\|_2\\) satisfies the **normal equations**
-$$
+
+```math
 A^T A\\,\\hat{\\mathbf{x}} = A^T\\mathbf{b},
-$$
+```
+
 or equivalently \\(\\hat{\\mathbf{x}}=A^+\\mathbf{b}\\). Geometrically, \\(A\\hat{\\mathbf{x}}\\) is the **orthogonal projection** of \\(\\mathbf{b}\\) onto \\(\\mathcal{R}(A)\\).
 
 **Stable solvers.** Prefer QR/SVD over explicit normal equations when \\(A^T A\\) is ill‑conditioned.
@@ -138,6 +188,12 @@ or equivalently \\(\\hat{\\mathbf{x}}=A^+\\mathbf{b}\\). Geometrically, \\(A\\ha
 ---
 
 ## 6) Calculus & Matrix Calculus (with common gradients)
+
+#### Definitions & Purpose (Jacobian / Hessian)
+- **Jacobian — Definition.** Matrix of first partial derivatives \(J_{ij}=\partial g_i/\partial x_j\) for \(g:\mathbb{R}^n\to\mathbb{R}^m\).
+- **Jacobian — Purpose.** Measures local sensitivity; underlies backpropagation and change‑of‑variables.
+- **Hessian — Definition.** Matrix of second partials \(H_{ij}=\partial^2 f/\partial x_i\partial x_j\) for \(f:\mathbb{R}^n\to\mathbb{R}\).
+- **Hessian — Purpose.** Encodes curvature; PSD Hessian characterizes convexity; used by Newton/Quasi‑Newton and to diagnose sharp/flat minima.
 
 ### 6.1 Jacobian & Hessian Shapes in Neural Networks
 
@@ -149,18 +205,22 @@ Consider an affine layer \(z=W x + b\) with \(W\in\mathbb{R}^{m\times n}\), \(b\
 
 **Softmax.** For \(s=\mathrm{softmax}(z)\in\mathbb{R}^K\) with \(s_i=\exp(z_i)/\sum_j \exp(z_j)\),
 the Jacobian is the \(K\times K\) matrix
-$$
+
+```math
 J_{s,z}=\mathrm{diag}(s) - s\,s^\top.
-$$
+```
+
 With one‑hot \(y\), the cross‑entropy \(\ell(z,y)=-\sum_i y_i\log s_i\) has gradient
 \(\nabla_z \ell = s - y\) and (per‑example) Hessian \(H_z=\mathrm{diag}(s) - s\,s^\top\) (PSD).
 
 **Logistic regression (binary) Hessian.**
 Stack examples into design matrix \(X\in\mathbb{R}^{N\times d}\) and let \(p=\sigma(X\theta)\), \(S=\mathrm{diag}(p\odot(1-p))\).
 For negative log‑likelihood \(L(\theta)\), the Hessian is
-$$
+
+```math
 \nabla^2_\theta L(\theta) = X^\top S X \succeq 0,
-$$
+```
+
 which shows convexity (and strict convexity when \(X\) has full column rank and \(0<p_i<1\)).
 
 **Convolutional layers as linear maps.**
@@ -178,41 +238,49 @@ In practice, autodiff uses **vector–Jacobian products** and never materializes
 **Gradients, Jacobians, Hessians.** For \\(f:\\mathbb{R}^n\\to\\mathbb{R}\\), the gradient is \\(\\nabla f\\in\\mathbb{R}^n\\) and the Hessian is \\(\\nabla^2 f\\in\\mathbb{R}^{n\\times n}\\). For \\(g:\\mathbb{R}^n\\to\\mathbb{R}^m\\), the Jacobian \\(J\\in\\mathbb{R}^{m\\times n}\\) has entries \\(J_{ij}=\\partial g_i/\\partial x_j\\).
 
 **Chain rule (vector form).**
-$$
+
+```math
 \\nabla_x f(g(x)) = J_g(x)^T\\,\\nabla f\\big( g(x) \\big).
-$$
+```
 
 **Common identities (assume compatible shapes; \\(A\\) constant):**
-$$
+
+```math
 \\nabla_{\\mathbf{x}}\\,(\\mathbf{a}^T\\!\\mathbf{x})=\\mathbf{a},\\quad
 \\nabla_{\\mathbf{x}}\\,\\tfrac12\\|\\mathbf{x}\\|_2^2=\\mathbf{x},\\quad
 \\nabla_{\\mathbf{x}}\\,\\tfrac12\\|A\\mathbf{x}-\\mathbf{b}\\|_2^2 = A^T(A\\mathbf{x}-\\mathbf{b}).
-$$
+```
 
 **Quadratic form.** For symmetric \\(Q\\),  
-$$
+
+```math
 \\nabla_{\\mathbf{x}}\\,(\\mathbf{x}^T Q\\mathbf{x}) = (Q+Q^T)\\mathbf{x}=2Q\\mathbf{x}. 
-$$
+```
 
 **Softmax & cross‑entropy (multi‑class).** Let \\(z\\in\\mathbb{R}^K\\), \\(\\mathrm{softmax}(z)_k = \\exp(z_k)/\\sum_j\\exp(z_j)\\). With one‑hot label \\(y\\), cross‑entropy \\(\\ell(z,y)=-\\sum_k y_k\\log\\mathrm{softmax}(z)_k\\) has gradient
-$$
+
+```math
 \\nabla_z\\,\\ell(z,y) = \\mathrm{softmax}(z) - y.
-$$
+```
 
 ---
 
 ## 7) Optimization Basics for ML (convexity, GD/SGD)
 
 **Convex sets & functions.** A set \\(C\\) is convex if \\(\\theta x+(1-\\theta)y\\in C\\) for any \\(x,y\\in C\\), \\(\\theta\\in[0,1]\\). A function \\(f\\) is convex if its domain is convex and
-$$
+
+```math
 f(\\theta x+(1-\\theta)y)\\le \\theta f(x)+(1-\\theta)f(y).
-$$
+```
+
 Important property: **every local minimum of a convex function is global**.
 
 **Gradient descent (fixed step).** For differentiable convex \\(f\\) with L‑Lipschitz gradient, GD with step \\(\\eta\\le 1/L\\) satisfies
-$$
+
+```math
 f(x_k)-f(x^*)\\le \\frac{\\|x_0-x^*\\|_2^2}{2\\eta k},
-$$
+```
+
 i.e., \\(\\mathcal{O}(1/k)\\) sublinear convergence.
 
 **Stochastic gradient descent.** Replace full gradients with unbiased minibatch estimates; use decaying steps or adaptive methods (Adam) and iterate averaging; monitor validation loss to avoid overfitting.
@@ -226,9 +294,10 @@ i.e., \\(\\mathcal{O}(1/k)\\) sublinear convergence.
 **Don’t invert explicitly.** Solve \\(A\\mathbf{x}=\\mathbf{b}\\) with factorizations (`solve`) or least‑squares (`lstsq`), not `inv(A)@b`.
 
 **Log‑sum‑exp trick.** For stability in softmax/log‑likelihood, compute
-$$
+
+```math
 \\log\\sum_i e^{z_i} = z_{\\max} + \\log\\sum_i e^{z_i-z_{\\max}}.
-$$
+```
 
 ---
 
