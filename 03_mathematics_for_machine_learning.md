@@ -43,9 +43,11 @@ A matrix \(A\) is a linear map. Shapes tell you legality and cost:
 
 **Orthogonality & projections**
 Two vectors are **orthogonal** if \(\mathbf{x}^\top\mathbf{y}=0\). The **orthogonal projector** onto the column space of full‑column‑rank \(A\) is
-```math
+
+$$
 P = A(A^\top A)^{-1}A^\top,
-```
+$$
+
 so \(P\mathbf{b}\) is the closest point in \(\mathcal{R}(A)\) to \(\mathbf{b}\).
 
 **Quadratic forms**
@@ -72,10 +74,12 @@ All norms on finite‑dimensional spaces are equivalent, but constants matter fo
 - **Induced p‑norms**: \( \|A\|_p = \max_{\|\mathbf{x}\|_p=1}\|A\mathbf{x}\|_p \).
 
 **Inner products & geometry**
-```math
+
+$$
 \langle \mathbf{x}, \mathbf{y} \rangle = \mathbf{x}^\top \mathbf{y}, \qquad
 |\langle \mathbf{x}, \mathbf{y} \rangle| \le \|\mathbf{x}\|_2 \,\|\mathbf{y}\|_2 \quad\text{(Cauchy–Schwarz)}.
-```
+$$
+
 Angles via \( \cos\theta = \frac{\langle \mathbf{x},\mathbf{y}\rangle}{\|\mathbf{x}\|\,\|\mathbf{y}\|} \).
 
 **Inequalities you actually use**
@@ -101,9 +105,9 @@ Angles via \( \cos\theta = \frac{\langle \mathbf{x},\mathbf{y}\rangle}{\|\mathbf
 
 **Rank inequalities.**
 
-```math
+$$
 \\mathrm{rank}(AB)\\le \\min\\{\\mathrm{rank}(A),\\mathrm{rank}(B)\\}.
-```
+$$
 
 ---
 
@@ -140,21 +144,21 @@ Diagonalizability is the special case where **all** blocks are size \(1\).
 
 **Eigen‑decomposition (symmetric).** If \\(A=A^T\\), then there exists an orthonormal basis of eigenvectors \\(U=[\\mathbf{u}_1\\cdots \\mathbf{u}_n]\\) and real eigenvalues \\(\\lambda_i\\) such that
 
-```math
+$$
 A = U\\,\\mathrm{diag}(\\lambda_1,\\ldots,\\lambda_n)\\,U^T.
-```
+$$
 
 This is the **spectral theorem**. Quadratic forms decouple:
 
-```math
+$$
 \\mathbf{x}^T A \\mathbf{x} = \\sum_i \\lambda_i\\,(\\mathbf{u}_i^T\\mathbf{x})^2.
-```
+$$
 
 **Singular Value Decomposition (SVD).** For any \\(A\\in\\mathbb{R}^{m\\times n}\\),
 
-```math
+$$
 A = U\\,\\Sigma\\,V^T,\\qquad U\\in\\mathbb{R}^{m\\times m},\\; V\\in\\mathbb{R}^{n\\times n},\\; \\Sigma=\\mathrm{diag}(\\sigma_1\\!\\ge\\!\\cdots\\!\\ge\\!\\sigma_r\\!\\ge\\!0).
-```
+$$
 
 Columns of \\(U\\) and \\(V\\) are orthonormal left/right singular vectors; \\(\\sigma_i\\) are singular values.  
 **Best rank‑k approximation (Eckart–Young).** Truncate to the top \\(k\\) singular values: \\(A_k=U_{:k}\\Sigma_{:k,:k}V_{:k}^T\\) minimizes \\(\\|A-A_k\\|_F\\).
@@ -171,15 +175,15 @@ Columns of \\(U\\) and \\(V\\) are orthonormal left/right singular vectors; \\(\
 
 **Moore–Penrose pseudoinverse.** Defined for any \\(A\\): the unique matrix \\(A^+\\) satisfying the four Penrose conditions. If \\(A=U\\Sigma V^T\\), then
 
-```math
+$$
 A^+=V\\,\\Sigma^+\\,U^T,\\quad \\Sigma^+_{ii}=\\begin{cases}1/\\sigma_i,&\\sigma_i>0\\\\0,&\\sigma_i=0.\\end{cases}
-```
+$$
 
 **Least squares.** For overdetermined \\(A\\mathbf{x}\\approx \\mathbf{b}\\), the solution minimizing \\(\\|A\\mathbf{x}-\\mathbf{b}\\|_2\\) satisfies the **normal equations**
 
-```math
+$$
 A^T A\\,\\hat{\\mathbf{x}} = A^T\\mathbf{b},
-```
+$$
 
 or equivalently \\(\\hat{\\mathbf{x}}=A^+\\mathbf{b}\\). Geometrically, \\(A\\hat{\\mathbf{x}}\\) is the **orthogonal projection** of \\(\\mathbf{b}\\) onto \\(\\mathcal{R}(A)\\).
 
@@ -206,9 +210,9 @@ Consider an affine layer \(z=W x + b\) with \(W\in\mathbb{R}^{m\times n}\), \(b\
 **Softmax.** For \(s=\mathrm{softmax}(z)\in\mathbb{R}^K\) with \(s_i=\exp(z_i)/\sum_j \exp(z_j)\),
 the Jacobian is the \(K\times K\) matrix
 
-```math
+$$
 J_{s,z}=\mathrm{diag}(s) - s\,s^\top.
-```
+$$
 
 With one‑hot \(y\), the cross‑entropy \(\ell(z,y)=-\sum_i y_i\log s_i\) has gradient
 \(\nabla_z \ell = s - y\) and (per‑example) Hessian \(H_z=\mathrm{diag}(s) - s\,s^\top\) (PSD).
@@ -217,9 +221,9 @@ With one‑hot \(y\), the cross‑entropy \(\ell(z,y)=-\sum_i y_i\log s_i\) has 
 Stack examples into design matrix \(X\in\mathbb{R}^{N\times d}\) and let \(p=\sigma(X\theta)\), \(S=\mathrm{diag}(p\odot(1-p))\).
 For negative log‑likelihood \(L(\theta)\), the Hessian is
 
-```math
+$$
 \nabla^2_\theta L(\theta) = X^\top S X \succeq 0,
-```
+$$
 
 which shows convexity (and strict convexity when \(X\) has full column rank and \(0<p_i<1\)).
 
@@ -239,29 +243,29 @@ In practice, autodiff uses **vector–Jacobian products** and never materializes
 
 **Chain rule (vector form).**
 
-```math
+$$
 \\nabla_x f(g(x)) = J_g(x)^T\\,\\nabla f\\big( g(x) \\big).
-```
+$$
 
 **Common identities (assume compatible shapes; \\(A\\) constant):**
 
-```math
+$$
 \\nabla_{\\mathbf{x}}\\,(\\mathbf{a}^T\\!\\mathbf{x})=\\mathbf{a},\\quad
 \\nabla_{\\mathbf{x}}\\,\\tfrac12\\|\\mathbf{x}\\|_2^2=\\mathbf{x},\\quad
 \\nabla_{\\mathbf{x}}\\,\\tfrac12\\|A\\mathbf{x}-\\mathbf{b}\\|_2^2 = A^T(A\\mathbf{x}-\\mathbf{b}).
-```
+$$
 
 **Quadratic form.** For symmetric \\(Q\\),  
 
-```math
+$$
 \\nabla_{\\mathbf{x}}\\,(\\mathbf{x}^T Q\\mathbf{x}) = (Q+Q^T)\\mathbf{x}=2Q\\mathbf{x}. 
-```
+$$
 
 **Softmax & cross‑entropy (multi‑class).** Let \\(z\\in\\mathbb{R}^K\\), \\(\\mathrm{softmax}(z)_k = \\exp(z_k)/\\sum_j\\exp(z_j)\\). With one‑hot label \\(y\\), cross‑entropy \\(\\ell(z,y)=-\\sum_k y_k\\log\\mathrm{softmax}(z)_k\\) has gradient
 
-```math
+$$
 \\nabla_z\\,\\ell(z,y) = \\mathrm{softmax}(z) - y.
-```
+$$
 
 ---
 
@@ -269,17 +273,17 @@ In practice, autodiff uses **vector–Jacobian products** and never materializes
 
 **Convex sets & functions.** A set \\(C\\) is convex if \\(\\theta x+(1-\\theta)y\\in C\\) for any \\(x,y\\in C\\), \\(\\theta\\in[0,1]\\). A function \\(f\\) is convex if its domain is convex and
 
-```math
+$$
 f(\\theta x+(1-\\theta)y)\\le \\theta f(x)+(1-\\theta)f(y).
-```
+$$
 
 Important property: **every local minimum of a convex function is global**.
 
 **Gradient descent (fixed step).** For differentiable convex \\(f\\) with L‑Lipschitz gradient, GD with step \\(\\eta\\le 1/L\\) satisfies
 
-```math
+$$
 f(x_k)-f(x^*)\\le \\frac{\\|x_0-x^*\\|_2^2}{2\\eta k},
-```
+$$
 
 i.e., \\(\\mathcal{O}(1/k)\\) sublinear convergence.
 
@@ -295,9 +299,9 @@ i.e., \\(\\mathcal{O}(1/k)\\) sublinear convergence.
 
 **Log‑sum‑exp trick.** For stability in softmax/log‑likelihood, compute
 
-```math
+$$
 \\log\\sum_i e^{z_i} = z_{\\max} + \\log\\sum_i e^{z_i-z_{\\max}}.
-```
+$$
 
 ---
 
