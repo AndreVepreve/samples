@@ -7,6 +7,11 @@
 
 ## Linear & Logistic Regression (with Regularization)
 
+**Definition.** Linear regression models a continuous target as a linear combination of features; ridge adds an L2 penalty, lasso adds an L1 penalty, and elastic‑net mixes both. Logistic regression is a generalized linear model that maps \(w^\top x\) through the logistic function to model class probabilities.
+
+**Purpose.** Fast, interpretable baselines: use linear/ridge/lasso for continuous targets (robust to multicollinearity with ridge; feature selection with lasso) and logistic for classification with calibrated probabilities and sparse/high‑dimensional features.
+
+
 **When**: fast, strong baselines; interpretable; handles high‑dimensional sparse data.  
 **Scale**: standardize features for stability (especially with penalties).
 
@@ -43,6 +48,11 @@ clf = Pipeline([("pre", pre), ("model", LogisticRegression(max_iter=1000))])
 
 ## k‑Nearest Neighbors (kNN)
 
+**Definition.** A non‑parametric method that predicts using the labels/values of the \(k\) closest training points under a chosen distance metric.
+
+**Purpose.** Simple baseline when locality captures the concept of similarity; useful on small/medium data after scaling, or as a yardstick for more complex models.
+
+
 **When**: local similarity matters; small/medium datasets.  
 **Scale**: **must** scale numeric features; consider cosine distance for text embeddings.
 
@@ -68,6 +78,11 @@ knn = Pipeline([("pre", pre), ("model", KNeighborsClassifier())])
 
 ## Support Vector Machines (SVC)
 
+**Definition.** Maximum‑margin classifiers that separate classes with the widest possible margin; kernels (e.g., RBF) lift inputs to non‑linear feature spaces for flexible decision boundaries.
+
+**Purpose.** Strong choice for high‑dimensional problems and non‑linear boundaries on moderate‑sized datasets; offers robust performance with careful scaling and tuning of \(C\) and \(\gamma\).
+
+
 **When**: high‑dimensional problems; non‑linear decision boundaries (RBF).  
 **Scale**: **always** scale features.
 
@@ -90,6 +105,11 @@ svc = Pipeline([("pre", pre), ("model", SVC(kernel="rbf", probability=True))])
 ---
 
 ## Decision Trees
+
+**Definition.** Recursive partitioning that splits the feature space into axis‑aligned regions; predictions are piecewise‑constant within leaves.
+
+**Purpose.** Interpretable rules and automatic interaction handling; foundation learners for powerful tree ensembles.
+
 
 **When**: need simple rules/interpretability; non‑linear tabular signals.  
 **Scale**: insensitive to monotonic transforms; no scaling required.
@@ -115,6 +135,11 @@ tree = Pipeline([("pre", pre), ("model", DecisionTreeClassifier(random_state=42)
 ---
 
 ## Random Forests
+
+**Definition.** An ensemble of decision trees trained on bootstrapped samples with random feature sub‑sampling; predictions are averaged to reduce variance.
+
+**Purpose.** Strong, out‑of‑the‑box baseline for tabular data with mixed feature types; robust to scaling and outliers with minimal tuning.
+
 
 **When**: robust, strong default on tabular data; good first non‑linear model.  
 **Scale**: no scaling required; handles mixed feature types.
@@ -144,6 +169,11 @@ rf = Pipeline([("pre", pre),
 
 ## Extra Trees (Extremely Randomized Trees)
 
+**Definition.** An ensemble like random forests but with extra randomization: split thresholds are drawn at random per feature and the best among them is chosen, further de‑correlating trees.
+
+**Purpose.** Fast, variance‑reducing alternative to random forests that often performs competitively on noisy tabular problems.
+
+
 **When**: noisy data; want lower variance vs single trees; very fast.  
 **Scale**: not required.
 
@@ -169,6 +199,11 @@ et = Pipeline([("pre", pre),
 ---
 
 ## Gradient Boosting (Histogram‑based GBDT)
+
+**Definition.** Gradient‑boosted decision trees fitted stage‑wise to the negative gradient of a chosen loss; the histogram‑based variant bins features to speed up training on large datasets.
+
+**Purpose.** High‑accuracy choice for many structured/tabular tasks with strong non‑linearities; supports early stopping and regularization for precise control.
+
 
 **When**: best‑in‑class for many structured/tabular problems; supports monotonic constraints in recent versions.  
 **Scale**: not required; handles missing values internally (HistGB).
@@ -198,6 +233,9 @@ gb = Pipeline([("pre", pre),
 
 ## K‑Means (Unsupervised)
 
+**Definition.** Centroid‑based clustering that partitions data into \(k\) clusters by minimizing within‑cluster sum of squares (inertia) using Lloyd’s iterative refinement; modern implementations use k‑means++ seeding.
+
+**Purpose.** Quick segmentation and prototype discovery; often used for exploratory analysis, pre‑labeling, or building user/item cohorts.
 **When**: prototype clustering; roughly spherical clusters; scalable.  
 **Scale**: **must** scale features.
 
