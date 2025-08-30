@@ -240,6 +240,7 @@ for _ in range(2000):
 
 ## 8) Quick definitions & interview-ready notes
 
+## 8) Quick Definitions — Expanded & Interview‑Ready
 <a id="sec-quick"></a>
 
 ### Eigenvalues & Eigenvectors
