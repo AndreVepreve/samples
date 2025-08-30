@@ -233,10 +233,69 @@ for _ in range(2000):
 
 ## 8) Quick definitions & interview-ready notes
 
-- Eigenvalues/Eigenvectors: axes & scaling; PCA/stability.  
-- SVD: universal, stable; compression; pseudoinverse; PCA.  
-- Pseudoinverse: least-squares for rectangular/rank-deficient systems.  
-- Jacobian: linearization/backprop; Hessian: curvature/Newton.
+## 8) Quick Definitions — Expanded & Interview‑Ready
+
+### Eigenvalues & Eigenvectors
+![](./assets/f_eig.png)
+
+**What they are.** For a square matrix A, nonzero vector v and scalar λ satisfying A v = λ v are an **eigenvector/eigenvalue** pair. Eigenvectors are directions that are only **scaled** (not rotated) by the linear map; λ is the scale (possibly negative).
+
+**Why they matter in ML.**
+- **PCA**: eigenvectors of the covariance matrix give principal directions; eigenvalues give explained variance per direction.
+- **Stability & dynamics**: the sign/magnitude of eigenvalues of Jacobians/Hessians or update operators hints at stability/divergence.
+- **Graph learning**: eigenpairs of graph Laplacians encode cuts, diffusion, and community structure.
+- **Optimization geometry**: eigenvalues of the Hessian quantify curvature; small eigenvalues → flat directions, large → steep directions.
+
+**Key properties.**
+- Symmetric (real) matrices have **real eigenvalues** and **orthonormal eigenvectors** (spectral theorem).
+- The **trace** equals the sum of eigenvalues; **determinant** equals the product of eigenvalues.
+- The **dominant eigenvector** can be approximated efficiently via **power iteration**.
+
+**Pitfalls.** For non‑symmetric matrices, eigenvectors may be non‑orthogonal or complex; use SVD for robust geometry.
+
+---
+
+### Singular Value Decomposition (SVD)
+![](./assets/f_svd.png)   (Best rank‑k approx: ![](./assets/f_eckart_young.png))
+
+**What it is.** Any A ∈ ℝ^{m×n} factors as A = U Σ V^T with orthonormal U,V and nonnegative singular values in Σ. It is the most **numerically stable** way to study a linear map’s action.
+
+**Why it’s ubiquitous.**
+- **Compression / low‑rank**: truncate to k singular values to get the best rank‑k approximation in Frobenius norm.
+- **PCA via SVD**: for zero‑mean data matrix X, right singular vectors (rows of V^T) are principal axes; Σ^2/(n−1) gives variances.
+- **Conditioning**: κ₂(A) = σ_max/σ_min (see ![](./assets/f_condition_number.png)).
+
+**When to use it.** Ill‑conditioned least squares, dimensionality reduction, denoising, initialization, and diagnostics.
+
+**Cost.** Dense SVD is O(m n min{m,n}); use randomized/iterative SVD for large sparse matrices.
+
+---
+
+### Moore–Penrose Pseudoinverse
+![](./assets/f_pinv.png)
+
+**What it is.** For any matrix A, the **pseudoinverse** A^+ provides the minimum‑norm solution to least squares, even when A is rectangular or rank‑deficient.
+
+**Core use (least squares).** Solve min_x ||A x − b||₂² via x* = A^+ b. This equals the limit of ridge solutions as λ → 0⁺, and is given stably by the SVD (invert nonzero singular values).
+
+**Why not invert?** Explicit (A^T A)^{-1} A^T is numerically fragile; A^+ via SVD handles rank deficiency gracefully.
+
+**Interview tips.** State the four Penrose conditions if asked for formality; in practice, say “compute via SVD, zero‑out tiny σ_i.”
+
+---
+
+### Jacobian (for vector outputs) and Hessian (for scalar objectives)
+![](./assets/f_jacobian.png)   ![](./assets/f_hessian.png)   Chain rule: ![](./assets/f_chain_rule.png)
+
+**Jacobian.** For f: ℝⁿ→ℝᵐ, the **Jacobian** J_f ∈ ℝ^{m×n} collects first derivatives and is the best **linear approximation** of f near a point. In deep learning, backprop is repeated Jacobian‑vector (and vector‑Jacobian) products.
+
+**Hessian.** For a scalar g: ℝⁿ→ℝ, the **Hessian** H_g ∈ ℝ^{n×n} contains second derivatives (curvature). In optimization:
+- **Newton/Quasi‑Newton** methods use H^{-1} ∇g (or approximations) for fast convergence.
+- **Convexity**: H ⪰ 0 locally implies convex behavior; eigenvalues of H quantify anisotropy/ill‑conditioning.
+
+**Shapes & practice.**
+- If f(x)=A x, then J_f = A; for least squares ½||A x − b||₂², ∇ = A^T(Ax − b) and H = A^T A (see ![](./assets/f_ls_grad.png)).
+- Exact Hessians are expensive in high‑D; use **Hessian‑vector products** (automatic differentiation) for CG/Trust‑Region methods.
 
 ---
 
@@ -383,3 +442,82 @@ H_g =
 - MIT OCW 18.06SC (self-paced) — https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/
 - Murphy — *Probabilistic Machine Learning* (series site) — https://probml.github.io/pml-book/
 - Murphy — *Probabilistic Machine Learning: An Introduction* (MIT Press) — https://mitpress.mit.edu/9780262046824/probabilistic-machine-learning/
+
+---
+
+## Glossary — Terms and Abbreviations in the Quick Notes (Fully Explained)
+
+### Axes (Principal Axes)
+**Definition.** Coordinate directions used to describe data or a linear map. In PCA or spectral analyses, **principal axes** are orthonormal directions along which data variance is extremal.  
+**Purpose.** Provide an interpretable basis to project, visualize, compress, and denoise data.  
+**Details.** The principal axes are the eigenvectors of the covariance matrix (or right singular vectors from SVD of the centered data matrix). Projections onto the first few axes retain most variance.
+
+### Scaling (in Eigenanalysis)
+**Definition.** The multiplicative change of a vector in a specific direction under a linear map. If \(A\mathbf{v}=\lambda \mathbf{v}\), the factor \(\lambda\) is the **scaling** along eigenvector \(\mathbf{v}\).  
+**Purpose.** Explains how transformations stretch or contract space; used in stability, conditioning, and mode analysis.  
+**Details.** Negative \(\lambda\) flips direction; \(|\lambda|>1\) expands, \(|\lambda|<1\) contracts.
+
+### PCA (Principal Component Analysis)
+**Definition.** Orthogonal linear transform that rotates data to a basis of maximal variance directions.  
+**Purpose.** **Dimensionality reduction**, **compression**, **denoising**, and **visualization**.  
+**Details.** For centered data \(X\), SVD \(X=U\Sigma V^\top\) yields principal components (columns of \(V\)); variances are \(\Sigma^2/(n-1)\). The first \(k\) components explain the largest portion of variance.
+
+### Stability (Optimization / Dynamics / Linear Systems)
+**Definition.** A property describing whether iterates or trajectories remain bounded or converge (vs. diverge).  
+**Purpose.** Guarantees predictable training and robust systems.  
+**Details.** In gradient descent on a quadratic with Hessian \(H\), step size \(\eta\) must satisfy \(0<\eta<2/\lambda_{\max}(H)\) to ensure stability. In discrete linear systems \(x_{t+1}=Ax_t\), stability requires spectral radius \(\rho(A)<1\).
+
+### Universal (re: SVD as a universal factorization)
+**Definition.** SVD exists for **any** real (or complex) matrix; no symmetry, squareness, or rank assumptions needed.  
+**Purpose.** A single, robust tool to analyze geometry (directions and gains) of any linear map.  
+**Details.** \(A=U\Sigma V^\top\) with orthonormal \(U,V\) and nonnegative singular values in \(\Sigma\). Right singular vectors (columns of \(V\)) form an orthonormal basis of input space; left singular vectors (\(U\)) of output space.
+
+### (Numerically) Stable
+**Definition.** An algorithm is numerically stable if small input/rounding errors do not blow up in the output.  
+**Purpose.** Reliability in floating‑point computations.  
+**Details.** SVD/QR‑based solvers are stable; explicitly computing \((X^\top X)^{-1}\) is **unstable** when \(X\) is ill‑conditioned (use SVD/QR instead).
+
+### Compression (Low‑Rank Compression)
+**Definition.** Approximating a matrix (or dataset) by a lower‑rank representation retaining most of its “energy/variance.”  
+**Purpose.** Reduce storage and compute; denoise.  
+**Details.** Truncated SVD keeps the top \(k\) singular triplets: \(A_k=\sum_{i=1}^k \sigma_i\,\mathbf{u}_i\mathbf{v}_i^\top\). This is optimal in Frobenius norm (Eckart–Young).
+
+### Pseudoinverse (Moore–Penrose)
+**Definition.** The unique matrix \(A^+\) satisfying the Penrose conditions; computes minimum‑norm least‑squares solutions even when \(A\) is rectangular or rank‑deficient.  
+**Purpose.** Solve \(\min_x\|Ax-b\|_2^2\) robustly; handle under/overdetermined systems.  
+**Details.** Via SVD \(A=U\Sigma V^\top\), set \(A^+=V\Sigma^+U^\top\) where \(\Sigma^+\) inverts nonzero singular values and leaves zeros for near‑zero ones (regularization effect).
+
+### Least Squares (LS)
+**Definition.** Optimization problem minimizing squared residuals: \(\min_x \|Ax-b\|_2^2\).  
+**Purpose.** Core of **linear regression**, system identification, and many estimators under Gaussian noise.  
+**Details.** Normal equations \(A^\top A\,x=A^\top b\) (avoid explicit inverse); use QR/SVD for stability. See gradient PNG in the doc (LS gradient / Hessian).
+
+### Rectangular Matrix
+**Definition.** A non‑square matrix \(A\in\mathbb{R}^{m\times n}\) with \(m\ne n\).  
+**Purpose.** Models mappings between spaces of different dimensions (e.g., more samples than features or vice versa).  
+**Details.** In LS: **overdetermined** (\(m>n\)) — many equations; **underdetermined** (\(m<n\)) — many solutions, pick minimum‑norm via \(A^+\).
+
+### Rank‑Deficient
+**Definition.** A matrix whose rank is less than \(\min(m,n)\).  
+**Purpose.** Signals redundancy or collinearity in features; impacts identifiability and conditioning.  
+**Details.** LS problems become ill‑posed; \(A^+\) (via SVD) yields the minimum‑norm solution; regularization (ridge) improves generalization and stability.
+
+### Linearization
+**Definition.** Approximating a nonlinear function near a point by its first‑order Taylor expansion: \(f(x)\approx f(x_0)+J_f(x_0)(x-x_0)\).  
+**Purpose.** Analyze/optimize complex models locally; basis of Gauss–Newton, EKF, and backprop’s local derivatives.  
+**Details.** Valid in a neighborhood where higher‑order terms are small; accuracy depends on curvature (Hessian).
+
+### Backprop (Backpropagation)
+**Definition.** Efficient algorithm to compute gradients of scalar losses through composite functions (neural nets) using the chain rule in reverse.  
+**Purpose.** Enables training deep networks by gradient‑based optimization.  
+**Details.** Implements repeated **vector‑Jacobian** products; memory‑efficient variants (checkpointing) trade compute for memory.
+
+### Curvature
+**Definition.** Second‑order behavior captured by the **Hessian**; tells how gradients change with position.  
+**Purpose.** Drives step‑size choice, trust‑region radii, and convergence speed.  
+**Details.** Large eigenvalues ⇒ steep directions; tiny eigenvalues ⇒ flat/ill‑conditioned directions; negative eigenvalues indicate saddle/non‑convex regions.
+
+### Newton (Newton’s Method / Newton–Raphson)
+**Definition.** Second‑order optimization method updating \(x_{k+1}=x_k - H^{-1}\nabla f(x_k)\).  
+**Purpose.** Achieve **quadratic** local convergence near a well‑behaved optimum.  
+**Details.** Exact Hessians are expensive; **quasi‑Newton** (BFGS/L‑BFGS) build low‑rank Hessian approximations using gradients only; **Hessian‑vector products** enable CG‑Newton without forming \(H\).
