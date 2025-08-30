@@ -814,3 +814,267 @@ x_next = x - np.linalg.solve(H, H @ x - b)  # = H^{-1} b
 **Definition.** Second‑order optimization method updating \(x_{k+1}=x_k - H^{-1}\nabla f(x_k)\).  
 **Purpose.** Achieve **quadratic** local convergence near a well‑behaved optimum.  
 **Details.** Exact Hessians are expensive; **quasi‑Newton** (BFGS/L‑BFGS) build low‑rank Hessian approximations using gradients only; **Hessian‑vector products** enable CG‑Newton without forming \(H\).
+
+---
+
+## Glossary — Comprehensive (All Document Terms)
+
+### Vector
+**Definition.** Ordered tuple of numbers (element of ℝⁿ).  
+**Purpose.** Represents data points, parameters, gradients.  
+**Details.** Shapes: `(n,)` or `(n,1)`; use column-vector convention in math.
+
+### Matrix
+**Definition.** Rectangular array in ℝ^{m×n}; linear map from ℝⁿ → ℝᵐ.  
+**Purpose.** Encodes linear transforms, datasets (rows=samples), and weights.  
+**Details.** Composition corresponds to matrix multiplication.
+
+### Tensor
+**Definition.** Multi-dimensional array (order ≥ 3).  
+**Purpose.** Images (H×W×C), sequences (T×F), batches (B×⋯).  
+**Details.** Frameworks differ in memory layout (NCHW vs NHWC).
+
+### Linear Map (Linear Transformation)
+**Definition.** Function A(x) = Ax satisfying additivity & homogeneity.  
+**Purpose.** Building block of layers; local linearizations of nonlinear nets.  
+**Details.** See formula image in Section 1 (linear map).
+
+### Shape / Dimension
+**Definition.** Tuple describing array extents (e.g., m×n).  
+**Purpose.** Prevents broadcasting/matmul bugs; determines complexity.  
+**Details.** Keep (batch, features) clear; prefer explicit (n, d) naming.
+
+### Matrix Addition & Scalar Multiplication
+**Definition.** Element-wise operations with same shape; scaling multiplies all entries.  
+**Purpose.** Pre/post-processing, residual connections.  
+**Details.** Preserves shape; closed under linear space.
+
+### Matrix Multiplication
+**Definition.** (m×n)·(n×p) → (m×p); associative, not commutative.  
+**Purpose.** Compose maps/layers; combine features.  
+**Details.** Element formula shown earlier; use BLAS-backed routines.
+
+### Dot Product
+![](./assets/f_dot.png)  
+**Definition.** Inner product of two vectors; equals aᵀb.  
+**Purpose.** Similarity, projections, energy, gradients.  
+**Details.** Induces the ℓ₂ norm: ‖a‖₂² = aᵀa; used in cosine similarity.
+
+### Identity Matrix
+**Definition.** Square matrix I with ones on the diagonal, Ix = x.  
+**Purpose.** Neutral element for multiplication; regularization (λI).  
+**Details.** I is orthogonal; det(I)=1; trace(I)=n.
+
+### Diagonal Matrix
+**Definition.** Nonzero entries only on diagonal.  
+**Purpose.** Fast scaling per coordinate; easy inversion if diag≠0.  
+**Details.** Spectrum is just the diagonal entries.
+
+### Symmetric Matrix
+**Definition.** A = Aᵀ.  
+**Purpose.** Real eigenvalues; orthonormal eigenvectors; covariance/Hessian.  
+**Details.** Diagonalizable by an orthogonal basis (spectral theorem).
+
+### Orthogonal Matrix
+**Definition.** QᵀQ = I; length/angle preserving.  
+**Purpose.** Rotations/reflections; numerically stable bases.  
+**Details.** det(Q)=±1; inverse equals transpose.
+
+### Column Space (Range) & Null Space (Kernel)
+**Definition.** Range = {Ax}; Null = {x : Ax=0}.  
+**Purpose.** Reachable outputs vs. unconstrained inputs; rank deficiency.  
+**Details.** Rank-nullity theorem links their dimensions.
+
+### Rank & Rank–Nullity
+**Definition.** Rank = dim(column space); rank + nullity = n.  
+**Purpose.** Detect redundancy; solvability.  
+**Details.** Full column rank ⇒ unique LS solution.  See PNG in Section 1.
+
+### Determinant & Invertibility
+**Definition.** det(A): signed volume scaling; A invertible iff det(A)≠0.  
+**Purpose.** Change-of-variables, volume distortions.  
+**Details.** det(AB)=det(A)det(B); singular ⇔ collapses volume.
+
+### Condition Number
+**Definition.** κ₂(A)=σ_max/σ_min; sensitivity of Ax=b to perturbations.  
+**Purpose.** Gauge numerical reliability and step sizes.  
+**Details.** Large κ ⇒ ill-conditioned; prefer SVD/QR solvers.
+
+### Norms (Vector)
+**Definition.** Size measures: ℓ₁, ℓ₂, ℓ∞, general p-norms.  
+**Purpose.** Regularization, constraints, robustness.  
+**Details.** ℓ₁ promotes sparsity; ℓ∞ bounds worst-case error.  See PNG.
+
+### Norms (Matrix)
+**Definition.** Frobenius (element-wise), spectral (operator).  
+**Purpose.** Error/energy vs amplification bounds.  
+**Details.** ‖A‖₂ = σ_max; ‖A‖_F = sqrt(sum A_{ij}²).  See PNG.
+
+### Inner Product & Cosine Similarity
+**Definition.** aᵀb defines angle via cosθ = aᵀb/(‖a‖‖b‖).  
+**Purpose.** Embedding similarity, retrieval, ranking.  
+**Details.** Cosine is scale-invariant; pair with norm constraints.
+
+### Cauchy–Schwarz Inequality
+![](./assets/f_cauchy_schwarz.png)  
+**Definition.** |aᵀb| ≤ ‖a‖‖b‖ (equivalently (aᵀb)² ≤ (aᵀa)(bᵀb)).  
+**Purpose.** Bounding correlations; proves triangle inequality.  
+**Details.** Equality iff vectors are linearly dependent.
+
+### Triangle Inequality
+![](./assets/f_triangle.png)  
+**Definition.** ‖a+b‖ ≤ ‖a‖ + ‖b‖.  
+**Purpose.** Core property of norms; stability bounds.  
+**Details.** Extends to ℓ_p via Minkowski.
+
+### Hölder Inequality
+![](./assets/f_holder.png)  
+**Definition.** ∑|a_i b_i| ≤ ‖a‖_p ‖b‖_q with 1/p+1/q=1.  
+**Purpose.** Generalization behind CS (p=q=2).  
+**Details.** Used in generalization/robustness analyses.
+
+### Minkowski Inequality
+![](./assets/f_minkowski.png)  
+**Definition.** ‖a+b‖_p ≤ ‖a‖_p + ‖b‖_p.  
+**Purpose.** Proves ℓ_p is a norm.  
+**Details.** Triangle inequality in ℓ_p spaces.
+
+### Eigenvalues & Eigenvectors
+**Definition.** A v = λ v.  
+**Purpose.** Principal directions/scaling; stability; PCA; graph spectra.  
+**Details.** Symmetric A ⇒ real λ, orthonormal eigenvectors.
+
+### Spectral Theorem
+**Definition.** Symmetric A admits A=QΛQᵀ with orthonormal Q and real Λ.  
+**Purpose.** Diagonalization simplifies powers, exponentials, optimization.  
+**Details.** Basis for PCA and quadratic forms analysis.
+
+### Singular Values & SVD
+**Definition.** A=UΣVᵀ; Σ nonnegative singular values.  
+**Purpose.** Universal factorization; compression; conditioning; PCA.  
+**Details.** σ_i = sqrt(eigenvalues of AᵀA).  See SVD/Eckart–Young PNGs.
+
+### Low-Rank Approximation (Eckart–Young)
+**Definition.** Best rank-k approx by truncating SVD.  
+**Purpose.** Compression/denoising/fast inference.  
+**Details.** Optimal in Frobenius norm.  See PNG.
+
+### Moore–Penrose Pseudoinverse
+**Definition.** A⁺ gives min-norm LS solution for any A.  
+**Purpose.** Solve rectangular/rank-deficient systems robustly.  
+**Details.** Compute via SVD; threshold tiny σ.  See PNG.
+
+### Normal Equations
+**Definition.** AᵀA x = Aᵀb for LS.  
+**Purpose.** Closed-form condition for optimum.  
+**Details.** Prefer QR/SVD over explicit (AᵀA)^{-1}.
+
+### QR Factorization
+**Definition.** A = Q R with orthonormal Q and upper-triangular R.  
+**Purpose.** Stable LS solver; orthonormal basis construction.  
+**Details.** Householder/Gram–Schmidt variants; robust vs collinearity.
+
+### Cholesky Factorization
+**Definition.** For SPD M, M = L Lᵀ (lower-triangular L).  
+**Purpose.** Fast solves for normal equations/regression priors.  
+**Details.** Requires positive definiteness; very efficient, cache-friendly.
+
+### Gradient
+**Definition.** First derivatives of scalar function; direction of steepest ascent.  
+**Purpose.** Drives gradient-based training.  
+**Details.** Assembled via backprop/AD; shapes match parameters.
+
+### Jacobian
+**Definition.** Matrix of first partials for vector output.  
+**Purpose.** Linearization; sensitivity; backprop primitives.  
+**Details.** See PNG in Section 6; JVP/VJP are key AD ops.
+
+### Hessian
+**Definition.** Matrix of second partials.  
+**Purpose.** Curvature; Newton/Quasi-Newton; uncertainty.  
+**Details.** PSD for convex; eigenvalues drive conditioning.  See PNG.
+
+### Chain Rule
+**Definition.** Derivative of composition via product of derivatives.  
+**Purpose.** Backprop through deep compositional models.  
+**Details.** See PNG in Section 6 (vector form).
+
+### PSD / PD (Positive Semi/Definite)
+**Definition.** xᵀHx ≥ 0 (PSD) or >0 (PD) ∀x≠0.  
+**Purpose.** Guarantees convexity; ensures Cholesky factorization.  
+**Details.** Eigenvalues ≥ 0 (PSD) or > 0 (PD).
+
+### Spectral Radius
+**Definition.** ρ(A) = max |λ_i(A)|.  
+**Purpose.** Stability of iterations x_{t+1}=Ax_t.  
+**Details.** Need ρ(A)<1 for linear discrete-time stability.
+
+### Power Iteration
+**Definition.** Iterative method to approximate dominant eigenvector.  
+**Purpose.** Fast top-1 eigenpair for large matrices.  
+**Details.** Converges if |λ₁|>|λ₂| and start has component along v₁.
+
+### Covariance Matrix
+**Definition.** S = (1/(n-1)) XᵀX for centered data X.  
+**Purpose.** Encodes variances/correlations; PCA input.  
+**Details.** Symmetric PSD; eigenpairs = PCs/variances.
+
+### PCA (Principal Component Analysis)
+**Definition.** Orthogonal transform to principal axes of variance.  
+**Purpose.** Dimensionality reduction; compression; denoising.  
+**Details.** Implement via SVD of centered X; explained variance = Σ²/(n-1).
+
+### Ridge Regularization (ℓ₂)
+**Definition.** Add (λ/2)‖w‖² to the loss.  
+**Purpose.** Stabilize ill-conditioned problems; shrink coefficients.  
+**Details.** Closed form: (XᵀX + nλI)^{-1} Xᵀy. (See PNG.)
+
+### Regularization
+**Definition.** Penalties/priors to control model complexity.  
+**Purpose.** Reduce variance/overfit; improve conditioning.  
+**Details.** ℓ₁ (sparsity), ℓ₂ (shrinkage), elastic net, early stopping.
+
+### Orthonormal Basis
+**Definition.** Set of unit vectors, mutually orthogonal.  
+**Purpose.** Stable coordinates; simplifies projections/solves.  
+**Details.** Columns of Q in QR/SVD; eigenvectors for symmetric matrices.
+
+### Projection Matrix
+**Definition.** P satisfies P²=P (idempotent).  
+**Purpose.** Project onto subspaces (e.g., column space of A).  
+**Details.** Orthogonal projector: P = A(AᵀA)^{-1}Aᵀ (use pinv in practice).
+
+### Explained Variance (PCA)
+**Definition.** Variance captured by each PC: Σ²/(n-1).  
+**Purpose.** Choose k components; scree plots.  
+**Details.** Cumulative ratio guides dimensionality cutoffs.
+
+### Hessian–Vector Product (HVP)
+**Definition.** Map p ↦ H p without forming H.  
+**Purpose.** Enables CG/Newton/TR methods at scale.  
+**Details.** Computed via automatic differentiation rules.
+
+### Gauss–Newton
+**Definition.** Approximate Hessian by JᵀJ for LS-type losses.  
+**Purpose.** Faster than full Newton; suitable for residual models.  
+**Details.** Requires small residual assumption for accuracy.
+
+### BFGS / L-BFGS
+**Definition.** Quasi-Newton updates building H^{-1} (or H) approximations from gradients.  
+**Purpose.** Superlinear convergence without explicit Hessians.  
+**Details.** L-BFGS is memory-efficient via limited history.
+
+### Trust Region Methods
+**Definition.** Optimize within a region where model is reliable.  
+**Purpose.** Robust steps under curvature/line-search failures.  
+**Details.** Subproblem uses quadratic model with radius constraint.
+
+### Convexity
+**Definition.** f(θx+(1−θ)y) ≤ θf(x)+(1−θ)f(y).  
+**Purpose.** Guarantees global minima and stable optimization.  
+**Details.** Equivalent to PSD Hessian for twice-differentiable f.
+
+### Graph Laplacian
+**Definition.** L = D − W for weighted graph; normalized variants exist.  
+**Purpose.** Spectral clustering/diffusion; smoothness on graphs.  
+**Details.** L is PSD; eigenvectors encode communities and cuts.
