@@ -246,3 +246,140 @@ for _ in range(2000):
 - Goodfellow, Bengio, Courville — *Deep Learning* (MIT Press, free online)  
 - Murphy — *Probabilistic Machine Learning*  
 - Petersen & Pedersen — *The Matrix Cookbook* (free PDF)
+
+---
+
+## Practical Examples (Hands-on)
+
+### Matrix multiplication & associativity
+Let
+```
+A = [[1, 2],
+     [0, 1]]
+B = [[ 2, 0],
+     [-1, 3]]
+C = [[1, 1],
+     [4, 0]]
+```
+Then
+```
+A @ (B @ C) = [[24, 0], [11, -1]]
+(A @ B) @ C = [[24, 0], [11, -1]]
+```
+They are equal, illustrating associativity.
+
+### Orthogonal matrix (rotation)
+45° rotation matrix \(Q\) satisfies \(Q^\top Q \approx I\):
+```
+Q^T Q ≈
+[[1.0, 0.0], [0.0, 1.0]]
+```
+
+### Rank & null space
+For
+```
+M = [[1, 2, 3],
+     [2, 4, 6]]
+```
+```
+rank(M) = 1
+nullspace basis ≈ [[-2, 1, 0], [-3, 0, 1]]
+```
+(check: each basis vector v satisfies M @ v = 0).
+
+### Determinant & area scaling
+For
+```
+A = [[2, 0],
+     [1, 3]]
+det(A) = 6.0
+```
+A unit square’s area scales by |det(A)| = 6.0.
+
+### Ill-conditioning demo
+Let
+```
+A = [[1, 1],
+     [1, 1+ε]],  ε = 0.0001
+cond_2(A) ≈ 4.0e+04
+```
+Two nearby right-hand sides give very different solutions:
+```
+x(b=[2, 2+ε]) = [1.0, 1.0]
+x(b=[2, 2-ε]) = [3.0, -1.0]
+Δx = [2.0, -2.0]
+```
+
+### Vector norms
+For v = [3.0, -4.0, 0.0, 12.0]:
+```
+||v||_1 = 19.0
+||v||_2 = 13.0000
+||v||_∞ = 12.0
+```
+
+### Cosine similarity
+For a = [1.0, 2.0, 3.0], b = [-1.0, 0.0, 1.0]:
+```
+cosθ = 0.377964
+Cauchy–Schwarz: |a·b| = 2.000000 ≤ ||a||·||b|| = 5.291503
+Triangle: ||a+b|| = 4.472136 ≤ ||a|| + ||b|| = 5.155871
+```
+
+### Eigenvalues & eigenvectors (symmetric)
+For
+```
+A = [[2, 1],
+     [1, 2]]
+```
+```
+eigenvalues = [3.0, 1.0]
+eigenvectors (columns) ≈
+[[0.707107, -0.707107], [0.707107, 0.707107]]
+```
+
+### SVD (tiny 2×2)
+For
+```
+T = [[3, 1],
+     [1, 3]]
+```
+```
+U ≈ [[-0.707107, -0.707107], [-0.707107, 0.707107]]
+S ≈ [4.0, 2.0]
+V^T ≈ [[-0.707107, -0.707107], [-0.707107, 0.707107]]
+```
+
+### Pseudoinverse for least squares
+Solve min_x ||Ax - b||_2 with
+```
+A = [[1,0],
+     [1,1],
+     [1,2]],  b = [1, 2, 2]
+x* = [1.166667, 0.5]
+MSE = 0.055556
+```
+
+### Jacobian & Hessian at (x,y)=(1,2)
+For f(x,y) = [x^2, x y] and g(x,y) = x^2 + x y + y^2:
+```
+J_f(1,2) =
+[[2.0, 0.0], [2.0, 1.0]]
+∇g(1,2) = [4.0, 5.0]
+H_g = 
+[[2.0, 1.0], [1.0, 2.0]]
+```
+
+---
+
+## Sources & Links (Official/Authoritative)
+
+- Boyd & Vandenberghe — *Convex Optimization* (free PDF, Stanford) — https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf
+- Convex Optimization homepage (slides, extras) — https://stanford.edu/~boyd/cvxbook/
+- Petersen & Pedersen — *The Matrix Cookbook* (DTU) — https://www2.compute.dtu.dk/pubdb/pubs/3274-full.html
+- The Matrix Cookbook (Waterloo mirror PDF) — https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf
+- Goodfellow, Bengio, Courville — *Deep Learning* (free online) — https://www.deeplearningbook.org/
+- MIT OCW 18.06 Linear Algebra (Strang) — https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/
+- MIT OCW 18.06SC (self-paced) — https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/
+- Murphy — *Probabilistic Machine Learning* (series site) — https://probml.github.io/pml-book/
+- Murphy — *Probabilistic Machine Learning: An Introduction* (MIT Press) — https://mitpress.mit.edu/9780262046824/probabilistic-machine-learning/
